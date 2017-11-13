@@ -124,6 +124,7 @@ app.post(BASE_API_PATH + '/dissertations', function(req, res) {
 app.put(BASE_API_PATH + '/dissertations/:id', function(req, res) {
     var thisDissertation = req.body;
     var id = req.params.id;
+    thisDissertation.id = id; // changing the id is not allowed
     if (!thisDissertation) {
         console.log("WARNING: New PUT request to /dissertations/ without dissertation, sending 400...");
         res.sendStatus(400); // bad request
@@ -146,7 +147,7 @@ app.put(BASE_API_PATH + '/dissertations/:id', function(req, res) {
                             res.sendStatus(500); // internal server error 
                         }
                         else {
-                            res.send(result);
+                            res.send(thisDissertation);
                         }
                     });
                 }
