@@ -1,53 +1,30 @@
-var express = require('express');
-var bodyParser = require("body-parser");
+var express = require("express");
+var router = express.Router();
 var helmet = require("helmet");
-var path = require('path');
-var MongoClient = require("mongodb").MongoClient;
-var utils = require("./utils.js");
+var bodyParser = require("body-parser");
+var utils = require("./../utils.js");
 
-var port = (process.env.PORT || 10000);
+router.use(bodyParser.json()); //configura dentro de express el middleware bodyparser json
+router.use(helmet()); //improve security
 
-// Database initialization
-var db;
-var mdbURL = "mongodb://user:user@ds255455.mlab.com:55455/si1718-avp-dissertations";
-
-MongoClient.connect(mdbURL, { native_parser: true }, function(err, database) {
-    if (err) {
-        console.log("CAN NOT CONNECT TO DB: " + err);
-        process.exit(1);
-    }
-
-    db = database.collection("dissertations");
-
-    app.listen(port, () => {
-        console.log("Magic is happening on port " + port);
-    });
-});
-
-
-// API stuffs
-var BASE_API_PATH = "/api/v1";
-
-var app = express();
-
-app.use(bodyParser.json()); //configura dentro de express el middleware bodyparser json
-app.use(helmet()); //improve security
+var Dissertation = require("./Dissertation");
 
 // RETRIEVE all dissertations
-app.get(BASE_API_PATH + '/dissertations', function(req, res) {
-    db.find({}).toArray((err, elements) => {
+router.get('/', function(req, res) {
+    Dissertation.find({}, (err, elements) => {
         if (err) {
             console.error('WARNING: Error getting data from DB');
             res.sendStatus(500); // internal server error
         }
         else {
+            console.log("INFO: New GET request to /dissertations");
             res.send(elements);
         }
     });
 });
 
 // RETRIEVE a specific dissertation
-app.get(BASE_API_PATH + '/dissertations/:idDissertation', function(req, res) {
+router.get('/:idDissertation', function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New GET request to /dissertations/:idDissertation without idDissertation, sending 400...");
@@ -55,7 +32,7 @@ app.get(BASE_API_PATH + '/dissertations/:idDissertation', function(req, res) {
     }
     else {
         console.log("INFO: New GET request to /dissertations/" + idDissertation);
-        db.findOne({ "idDissertation": idDissertation }, (err, element) => {
+        Dissertation.findOne({ "idDissertation": idDissertation }, (err, element) => {
             if (err) {
                 console.error('WARNING: Error getting data from DB');
                 res.sendStatus(500);
@@ -74,8 +51,9 @@ app.get(BASE_API_PATH + '/dissertations/:idDissertation', function(req, res) {
     }
 });
 
+
 // CREATE a dissertation
-app.post(BASE_API_PATH + '/dissertations', function(req, res) {
+router.post('/', function(req, res) {
     var thisDissertation = req.body;
     if (!thisDissertation) {
         console.log("WARNING: New POST request to /dissertations/ without dissertation, sending 400...");
@@ -83,45 +61,45 @@ app.post(BASE_API_PATH + '/dissertations', function(req, res) {
     }
     else {
         console.log("INFO: New POST request to /dissertations with body: " + JSON.stringify(thisDissertation, 2, null));
-        if (!thisDissertation.author || !thisDissertation.year || !thisDissertation.title || !thisDissertation.tutors || !thisDissertation.tutors instanceof Array) {
+        // we NEED to verify that we have author and year
+        if (!thisDissertation.author || !thisDissertation.year) {
             console.log("WARNING: The dissertation " + JSON.stringify(thisDissertation, 2, null) + " is not well-formed, sending 422...");
             res.sendStatus(422); // unprocessable entity
         }
         else {
             var idDissertation = utils.generateDissertationId(req.body.author, req.body.year);
-            thisDissertation.idDissertation = idDissertation;
-            db.findOne({ "idDissertation": idDissertation }, function(err, element) {
+            Dissertation.create({
+                tutors: thisDissertation.tutors,
+                author: thisDissertation.author,
+                title: thisDissertation.title,
+                year: thisDissertation.year,
+                idDissertation: idDissertation
+            }, (err, dissertation) => {
                 if (err) {
-                    console.error('WARNING: Error getting data from DB');
-                    res.sendStatus(500); // internal server error
-                }
-                else {
-                    if (element) {
+                    if (err.name == "ValidationError") {
+                        console.log("WARNING: The dissertation " + JSON.stringify(thisDissertation, 2, null) + " is not well-formed, sending 422...");
+                        res.sendStatus(422); // unprocessable entity
+                    }
+                    else if (err.name == "MongoError") {
                         console.log("WARNING: The dissertation " + JSON.stringify(thisDissertation, 2, null) + " already extis, sending 409...");
                         res.sendStatus(409); // conflict
                     }
                     else {
-                        db.insertOne(req.body, (err, result) => {
-                            if (err) {
-                                console.error('WARNING: Error inserting data in DB');
-                                res.sendStatus(500); // internal server error
-                            }
-                            else {
-                                console.log("INFO: Adding dissertation " + JSON.stringify(thisDissertation, 2, null));
-                                res.sendStatus(201);
-                            }
-                        });
+                        console.error('WARNING: Error inserting data in DB ' + err.name);
+                        res.sendStatus(500); // internal server error
                     }
                 }
+                else {
+                    console.log("INFO: Adding dissertation " + JSON.stringify(thisDissertation, 2, null));
+                    res.sendStatus(201);
+                }
             });
-
         }
-
     }
 });
 
 // UPDATE a specific dissertation
-app.put(BASE_API_PATH + '/dissertations/:idDissertation', function(req, res) {
+router.put('/:idDissertation', function(req, res) {
     var thisDissertation = req.body;
     var idDissertation = req.params.idDissertation;
     if (!thisDissertation) {
@@ -130,51 +108,28 @@ app.put(BASE_API_PATH + '/dissertations/:idDissertation', function(req, res) {
     }
     else {
         if (thisDissertation.idDissertation && thisDissertation.idDissertation != idDissertation) {
-            res.sendStatus(400); // changing the idDissertation is not allowed
+            res.sendStatus(400); // modifying the idDissertation is not allowed
         }
         else {
-            db.findOne({ "idDissertation": idDissertation }, function(err, element) {
+            console.log("INFO: New PUT request to /dissertations with body: " + JSON.stringify(thisDissertation, 2, null));
+            Dissertation.findOneAndUpdate({ idDissertation: idDissertation }, { $set: thisDissertation }, { new: true }, function(err, element) {
                 if (err) {
-                    console.error('WARNING: Error getting data from DB');
-                    res.sendStatus(500); // internal server error
+                    console.error('WARNING: Error inserting data in DB ' + err.name);
+                    res.sendStatus(500); // internal server error 
                 }
                 else {
-                    if (!element) {
-                        console.log("WARNING: There is not any dissertation with idDissertation " + idDissertation);
-                        res.sendStatus(404);
-                    }
-                    else {
-                        db.updateOne({ "idDissertation": idDissertation }, { $set: thisDissertation }, (err, result) => {
-                            if (err) {
-                                console.error('WARNING: Error inserting data in DB');
-                                res.sendStatus(500); // internal server error 
-                            }
-                            else {
-                                db.findOne({ "idDissertation": idDissertation }, function(err, updatedElement) {
-                                    if (err) {
-                                        console.error('WARNING: Error inserting data in DB');
-                                        res.sendStatus(500); // internal server error 
-                                    }
-                                    else {
-                                        res.send(updatedElement);
-
-                                    }
-                                })
-
-                            }
-                        });
-                    }
+                    res.send(element);
                 }
+
             });
         }
     }
 });
 
 // DELETE all dissertations
-app.delete(BASE_API_PATH + '/dissertations', function(req, res) {
+router.delete('/', function(req, res) {
     console.log("INFO: New DELETE request to /dissertations");
-    db.deleteMany({}, (err, output) => {
-
+    Dissertation.remove({}, (err, output) => {
         if (err) {
             console.error('WARNING: Error removing data from DB');
             res.sendStatus(500);
@@ -193,7 +148,7 @@ app.delete(BASE_API_PATH + '/dissertations', function(req, res) {
 });
 
 // DELETE a specific dissertation
-app.delete(BASE_API_PATH + '/dissertations/:idDissertation', function(req, res) {
+router.delete('/:idDissertation', function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New DELETE request to /dissertations/:idDissertation without idDissertation, sending 400...");
@@ -201,7 +156,7 @@ app.delete(BASE_API_PATH + '/dissertations/:idDissertation', function(req, res) 
     }
     else {
         console.log("INFO: New DELETE request to /dissertations/" + idDissertation);
-        db.deleteOne({ "idDissertation": idDissertation }, (err, output) => {
+        Dissertation.deleteOne({ idDissertation: idDissertation }, (err, output) => {
             if (err) {
                 console.error('WARNING: Error removing data from DB');
                 res.sendStatus(500); // internal server error
@@ -220,18 +175,20 @@ app.delete(BASE_API_PATH + '/dissertations/:idDissertation', function(req, res) 
     }
 });
 
-
 // NOT ALLOWED OPERATIONS
 
 // POST a specific dissertaiton
-app.post(BASE_API_PATH + "/dissertations/:idDissertation", function(req, res) {
+router.post("/:idDissertation", function(req, res) {
     var idDissertation = req.params.idDissertation;
     console.log("WARNING: New POST request to /dissertations/" + idDissertation + ", sending 405...");
     res.sendStatus(405); // method not allowed
 });
 
 // PUT over a collection
-app.put(BASE_API_PATH + "/dissertations", function(req, res) {
+router.put("/", function(req, res) {
     console.log("WARNING: New PUT request to /dissertations, sending 405...");
     res.sendStatus(405); // method not allowed
 });
+
+
+module.exports = router;
