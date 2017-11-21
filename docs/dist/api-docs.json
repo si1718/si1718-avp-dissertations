@@ -29,16 +29,63 @@
                "Dissertations"
             ],
             "description":"Returns all the dissertations",
-            "operationId":"for the URL",
+            "operationId":"findAll",
             "produces":[
                "application/json"
             ],
             "responses":{
                "200":{
-                  "description":"create response",
+                  "description":"OK",
                   "schema":{
                      "$ref":"#/definitions/response"
                   }
+               }
+            }
+         },
+         "post": {
+            "tags": [
+               "Dissertations"
+            ],
+            "description": "Creates a dissertation",
+            "operationId": "createDissertation",
+            "produces":[
+               "application/json"
+            ],
+            "consumes":[
+              "application/json" 
+            ],
+            "parameters":[
+               {
+                  "name":"Dissertation parameters",
+                  "in":"body",
+                  "description":"Dissertation to add to the database",
+                  "required":true,
+                  "schema":{
+                     "$ref":"#/definitions/create"
+                  }
+               }
+            ],
+            "responses":{
+               "201":{
+                  "description":"OK",
+                  "schema":{
+                     "$ref":"#/definitions/response"
+                  }
+               }
+            }
+         },
+         "delete":{
+            "tags":[
+               "Dissertations"
+            ],
+            "description":"Deletes all the dissertations",
+            "operationId":"deleteAll",
+            "produces":[
+               "application/json"
+            ],
+            "responses":{
+               "204":{
+                  "description":"No content"
                }
             }
          }
@@ -64,10 +111,73 @@
             ],
             "responses":{
                "200":{
-                  "description":"response",
+                  "description":"OK",
                   "schema":{
                      "$ref":"#/definitions/response1"
                   }
+               }
+            }
+         },
+         "put": {
+            "tags": [
+               "Dissertations"
+            ],
+            "description": "Updates a dissertation",
+            "operationId": "updateDissertation",
+            "produces":[
+               "application/json"
+            ],
+            "consumes":[
+              "application/json" 
+            ],
+            "parameters":[
+               {
+                  "name":"idDissertation",
+                  "in":"path",
+                  "description":"ID to fetch",
+                  "required":true,
+                  "type":"string"
+               },
+               {
+                  "name":"Dissertation parameters",
+                  "in":"body",
+                  "description":"Parameters to update",
+                  "required":true,
+                  "schema":{
+                     "$ref":"#/definitions/update"
+                  }
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"OK",
+                  "schema":{
+                     "$ref":"#/definitions/response"
+                  }
+               }
+            }
+         },
+         "delete":{
+            "tags":[
+               "Dissertations"
+            ],
+            "description":"Deletes a specific dissertation",
+            "operationId":"deleteByidDissertation",
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               {
+                  "name":"idDissertation",
+                  "in":"path",
+                  "description":"ID to fetch",
+                  "required":true,
+                  "type":"string"
+               }
+            ],
+            "responses":{
+               "204":{
+                  "description":"No content"
                }
             }
          }
@@ -76,16 +186,51 @@
    "definitions":{
       "create":{
          "properties":{
-            "eventId":{
+            "tutors":{
+               "required":true,
+               "type":"[string]",
+               "example": ["Tuto 1", "Tutor 2"]
+            },
+            "title":{
                "required":true,
                "type":"string",
-               "example":"mathmaticial"
+               "example":"Dissertation title"
             },
-            "numberRequired":{
+            "author":{
+               "required":true,
+               "type":"string",
+               "example":"Author"
+            },
+            "year":{
                "required":true,
                "type":"integer",
                "format":"int64",
-               "example":500
+               "example":2017
+            }
+         }
+      },
+      "update":{
+         "properties":{
+            "tutors":{
+               "required":false,
+               "type":"[string]",
+               "example": ["Tuto 1", "Tutor 2"]
+            },
+            "title":{
+               "required":false,
+               "type":"string",
+               "example":"Dissertation title"
+            },
+            "author":{
+               "required":false,
+               "type":"string",
+               "example":"Author"
+            },
+            "year":{
+               "required":false,
+               "type":"integer",
+               "format":"int64",
+               "example":2017
             }
          }
       },
