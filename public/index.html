@@ -1,0 +1,73 @@
+<html ng-app = "RESTClientApp">
+    
+    <link
+        rel="stylesheet"
+        href="/bower_components/bootstrap/dist/css/bootstrap.min.css"
+        type="text/css" />
+    <link
+        rel="stylesheet"
+        href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css"
+        type="text/css" />
+    
+    <script
+        type="text/javascript"
+        src="/bower_components/jquery/dist/jquery.min.js"></script>
+    
+    <script
+        type="text/javascript"
+        src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <script
+        type="text/javascript"
+        src="/bower_components/angular/angular.min.js"></script>
+    
+     <script
+        type="text/javascript">
+             var app = angular.module("RESTClientApp", []);
+            console.log("App initialized");
+            
+            app.controller("ListCtrl", ["$scope", "$http", function ($scope, $http){
+                $http
+                    .get("/api/v1/dissertations")
+                    .then(function(response){
+                        $scope.dissertations = response.data;
+                        console.log(response);
+                        console.log("fdfdd");
+                    });
+                
+            }]);
+            
+     </script>
+    
+    <body>
+        
+        <div ng-controller="ListCtrl">
+            
+            <h2>Contacts</h2>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tutors</th>
+                        <th>Author</th>
+                        <th>Title</th>
+                        <th>Year</th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr ng-repeat="dissertation in dissertations">
+                        <td>{{dissertation.idDissertation}}</td>
+                        <td>{{dissertation.tutors.join(", ")}}</td>
+                        <td>{{dissertation.author}}</td>
+                        <td>{{dissertation.title}}</td>
+                        <td>{{dissertation.year}}</td>
+                    </tr>
+                </tbody>
+                
+            </table>
+            
+            
+        </div>
+    </body>
+</html>
