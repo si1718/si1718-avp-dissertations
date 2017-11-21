@@ -35,7 +35,7 @@
             ],
             "responses":{
                "200":{
-                  "description":"OK",
+                  "description":"Returns an array with all the dissertations registered in the system",
                   "schema":{
                      "$ref":"#/definitions/response"
                   }
@@ -67,10 +67,7 @@
             ],
             "responses":{
                "201":{
-                  "description":"OK",
-                  "schema":{
-                     "$ref":"#/definitions/response"
-                  }
+                  "description":"The dissertation has been created"
                }
             }
          },
@@ -85,7 +82,10 @@
             ],
             "responses":{
                "204":{
-                  "description":"No content"
+                  "description":"All the dissertations have been deleted successfully"
+               },
+               "404":{
+                  "description": "The database is empty"
                }
             }
          }
@@ -113,7 +113,7 @@
                "200":{
                   "description":"OK",
                   "schema":{
-                     "$ref":"#/definitions/response1"
+                     "$ref":"#/definitions/response"
                   }
                }
             }
@@ -177,7 +177,10 @@
             ],
             "responses":{
                "204":{
-                  "description":"No content"
+                  "description":"The specified dissertation has been deleted successfully"
+               },
+               "404":{
+                  "description": "The specified dissertation has not been found"
                }
             }
          }
@@ -253,32 +256,31 @@
       },
       "response":{
          "properties":{
-            "jobID":{
+            "idDissertation":{
                "required":true,
                "type":"string",
-               "example":"12321432423"
-            }
-         }
-      },
-      "delete":{
-         "properties":{
-            "jobID":{
-               "required":true,
-               "type":"string",
-               "example":"234344234234"
+               "example":"author-2017"
             },
-            "status":{
+            "tutors":{
+               "required":true,
+               "type":"[string]",
+               "example": ["Tutor 1", "Tutor 2"]
+            },
+            "title":{
                "required":true,
                "type":"string",
-               "example":"deleted"
-            }
-         }
-      },
-      "400error":{
-         "properties":{
-            "message":{
+               "example":"Dissertation title"
+            },
+            "author":{
+               "required":true,
                "type":"string",
-               "example":"400 Bad Request"
+               "example":"Author"
+            },
+            "year":{
+               "required":true,
+               "type":"integer",
+               "format":"int64",
+               "example":2017
             }
          }
       }
