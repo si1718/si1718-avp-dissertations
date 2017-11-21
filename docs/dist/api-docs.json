@@ -43,46 +43,19 @@
             }
          }
       },
-      "/path/to/method/{someVariable}":{
-         "delete":{
-            "tags":[
-               "Tag1"
-            ],
-            "description":"Deletes a something",
-            "operationId":"delete",
-            "produces":[
-               "application/json"
-            ],
-            "parameters":[
-               {
-                  "name":"someVariable",
-                  "in":"path",
-                  "description":"ID to delete",
-                  "required":true,
-                  "type":"string"
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"delete response",
-                  "schema":{
-                     "$ref":"#/definitions/deleteRes"
-                  }
-               }
-            }
-         },
+      "/dissertations/{idDissertation}":{
          "get":{
             "tags":[
-               "Tag1"
+               "Dissertations"
             ],
-            "description":"Returns the status of something",
-            "operationId":"findById",
+            "description":"Returns a specific dissertation",
+            "operationId":"findByidDissertation",
             "produces":[
                "application/json"
             ],
             "parameters":[
                {
-                  "name":"ID",
+                  "name":"idDissertation",
                   "in":"path",
                   "description":"ID to fetch",
                   "required":true,
