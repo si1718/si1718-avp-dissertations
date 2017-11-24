@@ -11,13 +11,23 @@ var Dissertation = require("./Dissertation");
 
 // RETRIEVE all dissertations
 router.get('/', function(req, res) {
-    Dissertation.find({}, (err, elements) => {
+    var offset = 0;
+    var limit = 5;
+    var query = {};
+    if (req.query.offset)
+        offset = parseInt(req.query.offset);
+    if (req.query.limit)
+        limit = parseInt(req.query.limit);
+    if (req.query.search)
+        query.$text = { $search: req.query.search };
+
+    Dissertation.paginate(query, { offset: offset, limit: limit }, (err, elements) => {
         if (err) {
-            console.error('WARNING: Error getting data from DB');
+            console.error('WARNING: Error getting data from DB => ' + err);
             res.sendStatus(500); // internal server error
         }
         else {
-            console.log("INFO: New GET request to /dissertations");
+            console.log("INFO: New GET request to /dissertations . Offset " + offset + ". Query: " + JSON.stringify(query));
             res.send(elements);
         }
     });

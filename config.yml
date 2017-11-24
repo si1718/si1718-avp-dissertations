@@ -1,3 +1,3 @@
 db:
-    mongoUri: "mongodb://user:user@ds255455.mlab.com:55455/si1718-avp-dissertations"
+    mongoUri: "mongodb://user:user@ds119736.mlab.com:19736/si1718-avp-dissertations"
     #mongoUri: "mongodb://test:test@ds149535.mlab.com:49535/si1718-avp-sandbox"

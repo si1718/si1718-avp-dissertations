@@ -1,0 +1,26 @@
+<h1 class="section-heading">Dissertations</h1>
+<input ng-model="query" name="Search"></input><button class="btn btn-primary" ng-click="search()">Search</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tutors</th>
+            <th>Author</th>
+            <th>Title</th>
+            <th>Year</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="dissertation in dissertations">
+            <td>{{dissertation.idDissertation}}</td>
+            <td>{{dissertation.tutors.join(", ")}}</td>
+            <td>{{dissertation.author}}</td>
+            <td>{{dissertation.title}}</td>
+            <td>{{dissertation.year}}</td>
+        </tr>
+    </tbody>
+
+</table>
+
+<ul uib-pagination total-items="pagination.total"  items-per-page="pagination.limit" total-items="pagination.total" ng-model="pagination.page" max-size="5" class="pagination-sm" boundary-link-numbers="true" rotate="false" ng-change="loadPage()"></ul>
+
