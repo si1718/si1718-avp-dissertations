@@ -66,6 +66,8 @@ angular.module("DissertationsApp")
       }
       else if (error.status == "422") {
         $scope.errorMessage = "There are errors in your form."
+      } else if (error.status == "404") {
+        $scope.errorMessage = "Dissertation not found."
       }
       else {
         $scope.errorMessage = "An unexpected error has occurred."
