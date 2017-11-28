@@ -1,0 +1,67 @@
+<div class="row">
+    <div ng-show="errorMessage">
+        <div class="alert alert-danger fade in">
+            <strong>Error!</strong> {{ errorMessage }}
+        </div>
+    </div>
+</div>
+<form ng-hide="hideForm">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-10">
+                <label for="tutorsInput">Tutors</label>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tutor identifier</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="tutor in dissertation.tutors">
+                            <td>{{tutor}}</td>
+                            <td>
+                                <button class="btn btn-danger" ng-click="deleteTutor($index)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="tutorsInput" placeholder="Tutor name" ng-model="tutorName">
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary" ng-click="addTutor()">Add tutor</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="authorInput">Author</label>
+            <input type="text" class="form-control" id="authorInput" placeholder="Author" ng-model="dissertation.author">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="titleInput">Title</label>
+            <input type="text" class="form-control" id="titleInput" placeholder="Title" ng-model="dissertation.title">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="yearInput">Year</label>
+            <input type="Number" class="form-control" id="yearInput" placeholder="Year" ng-model="dissertation.year">
+        </div>
+    </div>
+
+    <div class="row">
+        <input class="btn btn-primary" type="submit" ng-click="send(dissertation)" value="Save" />
+    </div>
+
+</form>

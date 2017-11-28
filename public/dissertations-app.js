@@ -5,6 +5,14 @@ var app = angular.module("DissertationsApp", ["ngRoute", "ngAnimate", "ui.bootst
                 templateUrl: "list.html",
                 controller:"ListCtrl"
             })
+            .when("/dissertation/:idDissertation/edit", {
+                templateUrl: "edit.html",
+                controller: "EditCtrl"
+            })
+            .when("/dissertation/create", {
+                templateUrl: "edit.html",
+                controller: "EditCtrl"
+            });
         console.log("App Initialized");
 
     });
