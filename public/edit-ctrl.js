@@ -1,7 +1,8 @@
 angular.module("DissertationsApp")
   .controller("EditCtrl", ["$scope", "$http", "$routeParams", "$rootScope", "$location", function($scope, $http, $routeParams, $rootScope, $location) {
     var idDissertation = $routeParams.idDissertation;
-
+    $scope.idDissertation = idDissertation;
+    
     if (idDissertation) {
       // call the api and get the dissertation
       $http
