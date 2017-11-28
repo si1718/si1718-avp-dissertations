@@ -122,10 +122,16 @@ router.put('/:idDissertation', function(req, res) {
         }
         else {
             console.log("INFO: New PUT request to /dissertations with body: " + JSON.stringify(thisDissertation, 2, null));
-            Dissertation.findOneAndUpdate({ idDissertation: idDissertation }, { $set: thisDissertation }, { new: true }, function(err, element) {
+            Dissertation.findOneAndUpdate({ idDissertation: idDissertation }, { $set: thisDissertation }, { new: true, runValidators: true }, function(err, element) {
                 if (err) {
                     console.error('WARNING: Error inserting data in DB ' + err.name);
-                    res.sendStatus(500); // internal server error 
+                    if (err.name == "ValidationError") {
+                        console.log("WARNING: The dissertation " + JSON.stringify(thisDissertation, 2, null) + " is not well-formed, sending 422...");
+                        res.sendStatus(422); // unprocessable entity
+                    }
+                    else {
+                        res.sendStatus(500); // internal server error    
+                    }
                 }
                 else {
                     res.send(element);
