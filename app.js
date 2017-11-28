@@ -16,26 +16,4 @@ app.use(BASE_API_PATH + "/dissertations", DissertationController);
 // frontend
 app.use(express.static(path.join(__dirname, "public")));
 
-// swagger
-app.use(bodyParser());
-swagger.setAppHandler(app);
-
-app.use("/docs/v1", express.static('docs/dist'));
-swagger.setApiInfo({
-    title: "example API",
-    description: "API to do something, manage something...",
-    termsOfServiceUrl: "",
-    contact: "yourname@something.com",
-    license: "",
-    licenseUrl: ""
-});
-
-var domain = 'localhost';
-if(argv.domain !== undefined)
-    domain = argv.domain;
-else
-    console.log('No --domain=xxx specified, taking default hostname "localhost".');
-var applicationUrl = 'http://' + domain;
-swagger.configure(applicationUrl, '1.0.0');
-
 module.exports = app;
