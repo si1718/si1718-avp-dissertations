@@ -13,9 +13,20 @@ describe('Delete dissertation', function() {
         element(by.model("query")).clear().sendKeys('0000001TEST');
         element(by.buttonText('Search')).click().then(function() {
             element.all(by.repeater('dissertation in dissertations')).then(function(dissertations) {
-                dissertations[0].element(by.buttonText("Delete")).click().then(function(modal) {
-                   
+                dissertations[0].element(by.buttonText("Delete")).click().then(function() {
+                    browser.wait(element(by.css('[ng-click="deleteDissertation(dissertation.idDissertation)"]')).isDisplayed, 5000);
+                }).then(function() {
+                    element(by.css('[ng-click="deleteDissertation(dissertation.idDissertation)"]')).click()
+                }).then(function() {
+                    element(by.model("query")).clear().sendKeys('0000001TEST');
+                    element(by.buttonText('Search')).click().then(function() {
+                        element.all(by.repeater('dissertation in dissertations')).then(function(lDissertations){
+                           expect(lDissertations.length).toBe(0); 
+                        });
+                    });
                 });
+
+
             })
 
         });
