@@ -5,10 +5,12 @@ var argv = require('minimist')(process.argv.slice(2));
 var swagger = require("swagger-node-express");
 var bodyParser = require('body-parser');
 var path = require("path");
-
+var cors = require("cors");
 
 var BASE_API_PATH = "/api/v1";
 var BASE_AUTH_API_PATH = "/api/v1.1";
+
+app.use(cors());
 
 // API controllers
 var DissertationController = require("./dissertation/DissertationController");
