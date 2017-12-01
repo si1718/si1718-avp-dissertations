@@ -6,11 +6,18 @@ angular.module("DissertationsApp")
             $http
                 .get("/api/v1/dissertations?offset=" + ((page - 1) * limit) + "&limit=" + limit + search)
                 .then(function(response) {
-                    $scope.dissertations = response.data.docs;
-                    $scope.pagination = { total: response.data.total, page: parseInt(((response.data.offset) / response.data.limit) + 1, 10), pages: response.data.pages, limit: response.data.limit }
-                    $scope.hideTable = false;
+                    // get count of elements in db for this query
+                    $http
+                        .get('/api/v1/dissertations/stats'+search.replace("&", "?"))
+                        .then(function(stats) {
+                            $scope.dissertations = response.data;
+                            $scope.pagination = { total: stats.data.total, page: page, limit: limit }
+                            $scope.hideTable = false;
+                        }, function(error) {
+                            $scope.errorMessage = "An unexpected error has ocurred.";
+                            $scope.hideTable = true;
+                        });
                 }, function(error) {
-                    console.log(error);
                     $scope.errorMessage = "An unexpected error has ocurred.";
                     $scope.hideTable = true;
                 });

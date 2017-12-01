@@ -11,24 +11,57 @@ var Dissertation = require("./Dissertation");
 
 // RETRIEVE all dissertations
 router.get('/', function(req, res) {
-    var offset = 0;
-    var limit = 5;
     var query = {};
-    if (req.query.offset)
-        offset = parseInt(req.query.offset);
-    if (req.query.limit)
-        limit = parseInt(req.query.limit);
+    var offset = req.query.offset;
+    var limit = req.query.limit
+
     if (req.query.search)
         query.$text = { $search: req.query.search };
 
-    Dissertation.paginate(query, { offset: offset, limit: limit }, (err, elements) => {
+    if (offset || limit) {
+        if (!offset)
+            offset = 0;
+        if (!limit)
+            limit = 10;
+        Dissertation.paginate(query, { offset: parseInt(offset), limit: parseInt(limit) }, (err, elements) => {
+            if (err) {
+                console.error('WARNING: Error getting data from DB => ' + err);
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                console.log("INFO: New GET request to /dissertations . Query: " + JSON.stringify(query));
+                res.send(elements.docs);
+            }
+        });
+    }
+    else {
+        Dissertation.find(query, (err, elements) => {
+            if (err) {
+                console.error('WARNING: Error getting data from DB => ' + err);
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                console.log("INFO: New GET request to /dissertations . Query: " + JSON.stringify(query));
+                res.send(elements);
+            }
+        });
+    }
+});
+
+// RETRIEVE stats
+router.get('/stats', function(req, res) {
+    var query = {};
+    if (req.query.search)
+        query.$text = { $search: req.query.search };
+
+    Dissertation.count(query, (err, result) => {
         if (err) {
-            console.error('WARNING: Error getting data from DB => ' + err);
+            console.error('WARNING: Error getting count from DB => ' + err);
             res.sendStatus(500); // internal server error
         }
         else {
-            console.log("INFO: New GET request to /dissertations . Offset " + offset + ". Query: " + JSON.stringify(query));
-            res.send(elements);
+            console.log("INFO: New GET request to /dissertations/stats . Total: " + result);
+            res.status(200).send({ total: result });
         }
     });
 });
