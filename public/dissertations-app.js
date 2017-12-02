@@ -3,7 +3,7 @@ var app = angular.module("DissertationsApp", ["ngRoute", "ngAnimate", "ui.bootst
         $routeProvider
             .when("/", {
                 templateUrl: "list.html",
-                controller:"ListCtrl"
+                controller: "ListCtrl"
             })
             .when("/dissertation/:idDissertation/edit", {
                 templateUrl: "edit.html",
@@ -12,6 +12,9 @@ var app = angular.module("DissertationsApp", ["ngRoute", "ngAnimate", "ui.bootst
             .when("/dissertation/create", {
                 templateUrl: "edit.html",
                 controller: "EditCtrl"
+            }).when("/graph", {
+                templateUrl: "graph.html",
+                controller: "GraphCtrl"
             });
         console.log("App Initialized");
 
