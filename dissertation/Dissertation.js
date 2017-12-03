@@ -7,7 +7,8 @@ var DissertationSchema = new mongoose.Schema({
     author: { type: String, required: true },
     title: { type: String, required: true },
     year: { type: Number, required: true },
-    idDissertation: { type: String, required: true, unique: true }
+    idDissertation: { type: String, required: true, unique: true },
+    keywords: { type: [String], required: false }
 });
 
 DissertationSchema.plugin(mongoosePaginate);

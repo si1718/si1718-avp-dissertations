@@ -112,8 +112,5 @@ angular.module("DissertationsApp")
 
             });
         }
-
-
         refresh();
-
     }]);

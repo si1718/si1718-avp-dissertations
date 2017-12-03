@@ -8,7 +8,10 @@ angular.module("DissertationsApp")
       $http
         .get("/api/v1/dissertations/" + idDissertation)
         .then(function(response) {
-          $scope.dissertation = response.data;
+          var thisDissertation = response.data;
+          if(!thisDissertation.keywords)
+            thisDissertation.keywords = [];
+          $scope.dissertation = thisDissertation;
         }, function(error) {
           errorsHandling(error);
           $scope.hideForm = true;
@@ -20,7 +23,8 @@ angular.module("DissertationsApp")
         tutors: [],
         author: "",
         title: "",
-        year: 2017
+        year: 2017,
+        keywords: []
       }
     }
 
@@ -35,6 +39,8 @@ angular.module("DissertationsApp")
 
     // click function for saving (call put or post depending on if there's idDissertation or not)
     $scope.send = function(dissertation) {
+      if(typeof dissertation.keywords === 'string')
+        dissertation.keywords = dissertation.keywords.split(",");
       if (idDissertation) {
         delete dissertation._id;
         $http

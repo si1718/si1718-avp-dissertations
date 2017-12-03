@@ -64,6 +64,13 @@
     </div>
 
     <div class="row">
+        <div class="form-group col-md-6">
+            <label for="keywordsInput">Keywords (separated by comma)</label>
+            <input type="text" class="form-control" id="keywordsInput" placeholder="Keywords" ng-model="dissertation.keywords">
+        </div>
+    </div>
+
+    <div class="row">
         <input class="btn btn-primary" type="submit" ng-click="send(dissertation)" value="Save" />
     </div>
 
