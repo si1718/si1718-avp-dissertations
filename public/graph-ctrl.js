@@ -7,44 +7,109 @@ angular.module("DissertationsApp")
                 .then(function(response) {
                     var dissertations = response.data;
 
-                    var topTuples = sortDictionary(countRepeated(flatMap(x => x.tutors, dissertations)), 'desc').slice(0, 5);
-                    var data = topTuples.map(x => { return { name: x[0], y: x[1] } });
-                    loadChart(data);
+                    var topTutors = sortDictionary(countRepeated(flatMap(x => x.tutors, dissertations)), 'desc').slice(0, 20);
+                    loadTopTutorsChart(topTutors);
 
+                    var dissertationsPerYear = sortDictionary(countRepeated(flatMap(x => x.year, dissertations)), 'desc', true)
+                        .filter(x => parseInt(x[1]) >= 1995)
+                        .reverse();
+                    console.log(dissertationsPerYear)
+                    loadDissertationsPerYearChart(dissertationsPerYear.map(x => x[0]));
 
                 });
         }
 
-
-        function loadChart(data) {
-            Highcharts.chart('container', {
+        function loadTopTutorsChart(data) {
+            Highcharts.chart('container-tutors-chart', {
+                title: "",
                 chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
+                    type: 'column'
                 },
-                title: {
-                    text: 'Browser market shares January, 2015 to May, 2015'
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        },
+                        formatter: function() {
+                            return '<a href="/dissertations">' + this.value + '</a>';
+                        },
+                        useHTML: true
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Directed dissertations'
+                    }
+                },
+                legend: {
+                    enabled: false
                 },
                 tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    pointFormat: 'Directed dissertations by: <b>{point.y:.1f}</b>'
+                },
+                series: [{
+                    name: 'Dissertations',
+                    data: data,
+                    dataLabels: {
+                        enabled: true,
+                        rotation: -90,
+                        color: '#FFFFFF',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        y: 10, // 10 pixels down from the top
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                }]
+            });
+        }
+
+        function loadDissertationsPerYearChart(data) {
+            Highcharts.chart('container-year-chart', {
+                title: "",
+                yAxis: {
+                    title: {
+                        text: 'Number of dissertations'
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
                 },
                 plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
+                    series: {
+                        label: {
+                            connectorAllowed: false
                         },
-                        showInLegend: true
+                        pointStart: 1995
                     }
                 },
                 series: [{
-                    name: 'Brands',
-                    colorByPoint: true,
+                    name: 'Dissertations',
                     data: data
-                }]
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
             });
         }
 

@@ -9,12 +9,15 @@ var countRepeated = function(elements) {
     return counts;
 }
 
-var sortDictionary = function(elements, criteria) {
+var sortDictionary = function(elements, criteria, sortKeys = false) {
     var tuples = Object.keys(elements).map(function(key) {
-        return [key, elements[key]];
+        if (sortKeys)
+            return [elements[key], key];
+        else
+            return [key, elements[key]];
     });
     tuples.sort(function(first, second) {
-        if(criteria == 'desc')
+        if (criteria == 'desc')
             return second[1] - first[1];
         else
             return first[1] - second[1];
