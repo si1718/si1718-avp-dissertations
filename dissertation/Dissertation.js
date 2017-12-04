@@ -15,8 +15,8 @@ var DissertationSchema = new mongoose.Schema({
 });
 
 DissertationSchema.plugin(mongoosePaginate);
-DissertationSchema.index({ author: 'text', title: 'text', year: 'text', tutors: 'text', idDissertation: 'text' });
-//DissertationSchema.index({'$**': 'text'});
+//DissertationSchema.index({ author: 'text', title: 'text', year: 'text', tutors: 'text', 'tutors.url': 'text', 'tutors.name': 'text', authorName: 'text', idDissertation: 'text' });
+DissertationSchema.index({'$**': 'text'});
 
 
 mongoose.model("Dissertation", DissertationSchema);

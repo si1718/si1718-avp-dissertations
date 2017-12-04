@@ -110,7 +110,10 @@ router.post('/', function(req, res) {
             res.sendStatus(422); // unprocessable entity
         }
         else {
-            var idDissertation = utils.generateDissertationId(req.body.author, req.body.year);
+            if(utils.isUrl(req.body.author))
+                var idDissertation = utils.generateDissertationId(req.body.authorName, req.body.year);
+            else
+                var idDissertation = utils.generateDissertationId(req.body.author, req.body.year);
             Dissertation.create({
                 tutors: thisDissertation.tutors,
                 author: thisDissertation.author,
@@ -119,7 +122,8 @@ router.post('/', function(req, res) {
                 title: thisDissertation.title,
                 year: thisDissertation.year,
                 idDissertation: idDissertation,
-                keywords: thisDissertation.keywords
+                keywords: thisDissertation.keywords,
+                viewURL: "https://si1718-avp-dissertations.herokuapp.com/#!/dissertations/"+idDissertation+"/edit"
             }, (err, dissertation) => {
                 if (err) {
                     if (err.name == "ValidationError") {
