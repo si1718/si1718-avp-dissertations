@@ -14,7 +14,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <a href="#!/dissertation/create" class="btn btn-primary" ng-click="search()">Create</a>
+        <a href="#!/dissertations/create" class="btn btn-primary" ng-click="search()">Create</a>
     </div>
 </div>
 <br>
@@ -44,7 +44,7 @@
                 <td>{{dissertation.idDissertation}}</td>
                 <td>
                     <p ng-repeat="tutor in dissertation.tutors">
-                        <span ng-show="tutor.url"><a href="{{tutor.view}}">{{ tutor.name }}</a></span>
+                        <span ng-show="tutor.url"><a href="{{tutor.viewURL}}">{{ tutor.name }}</a></span>
                         <span ng-hide="tutor.url">{{tutor}}</span>
                     </p>
                 </td>
@@ -80,7 +80,7 @@
 
                 </td>
                 <td>
-                    <a class="btn btn-primary" href="#!/dissertation/{{dissertation.idDissertation}}/edit">Edit</button>
+                    <a class="btn btn-primary" href="#!/dissertations/{{dissertation.idDissertation}}/edit">Edit</button>
             </td>
         </tr>
     </tbody>

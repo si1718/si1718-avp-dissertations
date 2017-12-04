@@ -6,9 +6,10 @@ angular.module("DissertationsApp")
                 .get("/api/v1/dissertations")
                 .then(function(response) {
                     var dissertations = response.data;
-
-                    var topTutors = sortDictionary(countRepeated(flatMap(x => x.tutors, dissertations)), 'desc').slice(0, 20);
+                    var tutors = flatMap(x => x.tutors, dissertations).map(x => x.name);
+                    var topTutors = sortDictionary(countRepeated(tutors), 'desc').slice(0, 20);
                     loadTopTutorsChart(topTutors);
+                    console.log(topTutors);
 
                     var dissertationsPerYear = sortDictionary(countRepeated(flatMap(x => x.year, dissertations)), 'desc', true)
                         .filter(x => parseInt(x[1]) >= 1995)
@@ -16,6 +17,24 @@ angular.module("DissertationsApp")
                     console.log(dissertationsPerYear)
                     loadDissertationsPerYearChart(dissertationsPerYear.map(x => x[0]));
 
+                    $http
+                        .get("https://si1718-rgg-groups.herokuapp.com/api/v1/groups")
+                        .then(function(response) {
+                            var groups = response.data.map(x => { return { group: x.name, leader: normalize(x.leader), components: x.components.map(c => normalize(c)) } });
+
+                            var dissertationsToGroups = tutors.map(x => {
+                                var xmin = normalize(x);
+                                var filtered = groups.filter(g => g.leader === xmin || g.components.includes(xmin))[0];
+                                if (filtered)
+                                    return filtered.group;
+                                else
+                                    return "no-group";
+                            }).filter(x => x != "no-group");
+
+                            var topGroups = sortDictionary(countRepeated(dissertationsToGroups), "desc").slice(0, 20);
+
+                            loadTopGroupsChart(topGroups);
+                        });
                 });
         }
 
@@ -32,11 +51,7 @@ angular.module("DissertationsApp")
                         style: {
                             fontSize: '13px',
                             fontFamily: 'Verdana, sans-serif'
-                        },
-                        formatter: function() {
-                            return '<a href="/dissertations">' + this.value + '</a>';
-                        },
-                        useHTML: true
+                        }
                     }
                 },
                 yAxis: {
@@ -112,5 +127,53 @@ angular.module("DissertationsApp")
 
             });
         }
+
+        function loadTopGroupsChart(data) {
+            Highcharts.chart('container-groups-chart', {
+                title: "",
+                chart: {
+                    type: 'column'
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Directed dissertations'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: 'Directed dissertations by: <b>{point.y:.1f}</b> group'
+                },
+                series: [{
+                    name: 'Dissertations',
+                    data: data,
+                    dataLabels: {
+                        enabled: true,
+                        rotation: -90,
+                        color: '#FFFFFF',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        y: 10, // 10 pixels down from the top
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                }]
+            });
+        }
+
         refresh();
     }]);

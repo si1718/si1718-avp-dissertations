@@ -23,7 +23,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="tutor in dissertation.tutors">
-                            <td ng-show="tutor.url"><a href="{{tutor.view}}">{{ tutor.name }}</a></td>
+                            <td ng-show="tutor.url"><a href="{{tutor.viewURL}}">{{ tutor.name }}</a></td>
                             <td ng-hide="tutor.url">{{tutor}}</td>
 
                             <td>

@@ -10,7 +10,8 @@ var DissertationSchema = new mongoose.Schema({
     title: { type: String, required: true },
     year: { type: Number, required: true },
     idDissertation: { type: String, required: true, unique: true },
-    keywords: { type: [String], required: false }
+    keywords: { type: [String], required: false },
+    viewURL: { type: String, required: true }
 });
 
 DissertationSchema.plugin(mongoosePaginate);
