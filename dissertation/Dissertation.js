@@ -3,8 +3,10 @@ var mongoose = require("mongoose");
 var mongoosePaginate = require('mongoose-paginate');
 
 var DissertationSchema = new mongoose.Schema({
-    tutors: { type: [String], required: true },
+    tutors: { type: [{}], required: true },
     author: { type: String, required: true },
+    authorName: { type: String, required: false },
+    authorViewURL: { type: String, required: false },
     title: { type: String, required: true },
     year: { type: Number, required: true },
     idDissertation: { type: String, required: true, unique: true },

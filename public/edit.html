@@ -17,15 +17,20 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Tutor identifier</th>
+                            <th>Tutor</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="tutor in dissertation.tutors">
-                            <td>{{tutor}}</td>
+                            <td ng-show="tutor.url"><a href="{{tutor.view}}">{{ tutor.name }}</a></td>
+                            <td ng-hide="tutor.url">{{tutor}}</td>
+
                             <td>
                                 <button class="btn btn-danger" ng-click="deleteTutor($index)">Delete</button>
+                            </td>
+                            <td>
+                                <button ng-hide="tutor.url" class="btn btn-primary" ng-click="validateTutor($index)">Validate</button>
                             </td>
                         </tr>
                     </tbody>
@@ -43,9 +48,17 @@
     </div>
 
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-6" ng-hide="dissertation.authorName">
             <label for="authorInput">Author</label>
             <input type="text" class="form-control" id="authorInput" placeholder="Author" ng-model="dissertation.author">
+            <br>
+            <button class="btn btn-primary" ng-click="validateAuthor(dissertation.author)">Validate author</button>
+        </div>
+        <div class="form-group col-md-6" ng-show="dissertation.authorName">
+            <label for="authorInput">Author</label>
+            <p><a href="{{dissertation.authorViewURL}}">{{dissertation.authorName}}</a></p>
+            <br>
+            <button class="btn btn-primary" ng-click="editAuthor()">Edit author</button>
         </div>
     </div>
 

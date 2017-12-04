@@ -42,8 +42,16 @@
         <tbody>
             <tr ng-repeat="dissertation in dissertations">
                 <td>{{dissertation.idDissertation}}</td>
-                <td>{{dissertation.tutors.join(", ")}}</td>
-                <td>{{dissertation.author}}</td>
+                <td>
+                    <p ng-repeat="tutor in dissertation.tutors">
+                        <span ng-show="tutor.url"><a href="{{tutor.view}}">{{ tutor.name }}</a></span>
+                        <span ng-hide="tutor.url">{{tutor}}</span>
+                    </p>
+                </td>
+                <td>
+                    <span ng-show="dissertation.authorName"><a href="{{dissertation.authorViewURL}}">{{ dissertation.authorName }}</a></span>
+                    <span ng-hide="dissertation.authorName">{{dissertation.author}}</span>
+                </td>
                 <td>{{dissertation.title}}</td>
                 <td>{{dissertation.year}}</td>
                 <td>

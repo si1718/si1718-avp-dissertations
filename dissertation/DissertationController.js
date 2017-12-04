@@ -114,9 +114,12 @@ router.post('/', function(req, res) {
             Dissertation.create({
                 tutors: thisDissertation.tutors,
                 author: thisDissertation.author,
+                authorName: thisDissertation.authorName,
+                authorViewURL: thisDissertation.authorViewURL,
                 title: thisDissertation.title,
                 year: thisDissertation.year,
-                idDissertation: idDissertation
+                idDissertation: idDissertation,
+                keywords: thisDissertation.keywords
             }, (err, dissertation) => {
                 if (err) {
                     if (err.name == "ValidationError") {

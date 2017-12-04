@@ -24,3 +24,17 @@ var sortDictionary = function(elements, criteria, sortKeys = false) {
     });
     return tuples;
 }
+
+function isUrl(s) {
+    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+    return regexp.test(s);
+}
+
+var isIdResearcher = function(str) {
+    var orcidPattern = new RegExp("^([\\w0-9]{4}-){3}[\\w0-9]{4}$", "i");
+    var numIdPattern = new RegExp("^(0|[1-9][0-9]*)$", "i");
+    if (orcidPattern.test(str) || numIdPattern.test(str))
+        return true;
+    else
+        return false;
+}
