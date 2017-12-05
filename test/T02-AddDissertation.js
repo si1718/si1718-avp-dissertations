@@ -9,7 +9,7 @@ function writeScreenShot(data, filename) {
 
 describe('Add dissertation', function() {
     it('should add a contact', function() {
-        browser.get("http://localhost:8080/#!/dissertation/create"); // instruccion a phantomjs para que cargue esta url en el navegador fantasma
+        browser.get("http://localhost:8080/#!/dissertations/create"); // instruccion a phantomjs para que cargue esta url en el navegador fantasma
         element(by.id('tutorsInput')).clear().sendKeys("0000001");
         element(by.buttonText('Add tutor')).click().then(function() {
             element(by.model('dissertation.title')).clear().sendKeys('0000001TEST');
