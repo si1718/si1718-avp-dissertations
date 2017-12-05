@@ -13,4 +13,31 @@ function verifyToken(req, res, next) {
         next();
     });
 }
-module.exports = verifyToken;
+
+function checkAccessToken(req, res, next) {
+    var request = require("request");
+    var token = req.query.token;
+
+    var options = {
+        method: 'GET',
+        url: 'https://si1718-avp-dissertations.eu.auth0.com/',
+        headers: {
+            authorization: 'Bearer ' + token,
+            'content-type': 'application/json'
+        }
+    };
+
+    request(options, function(error, response, body) {
+
+        if (body == "Unauthorized") {
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.' });
+        }
+        else {
+            next();
+        }
+
+        console.log(body);
+    });
+}
+
+module.exports = checkAccessToken;
