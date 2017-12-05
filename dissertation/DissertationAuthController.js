@@ -4,6 +4,7 @@ var helmet = require("helmet");
 var bodyParser = require("body-parser");
 var utils = require("./../utils.js");
 var VerifyToken = require('../auth/VerifyToken');
+var auth0 = require('../auth/auth0')
 
 router.use(bodyParser.json()); //configura dentro de express el middleware bodyparser json
 router.use(helmet()); //improve security
@@ -11,7 +12,7 @@ router.use(helmet()); //improve security
 var Dissertation = require("./Dissertation");
 
 // RETRIEVE all dissertations
-router.get('/', VerifyToken, function(req, res) {
+router.get('/', auth0(), function(req, res) {
     var offset = 0;
     var limit = 5;
     var query = {};
@@ -35,7 +36,7 @@ router.get('/', VerifyToken, function(req, res) {
 });
 
 // RETRIEVE a specific dissertation
-router.get('/:idDissertation', VerifyToken, function(req, res) {
+router.get('/:idDissertation', auth0(), function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New GET request to /dissertations/:idDissertation without idDissertation, sending 400...");
@@ -64,7 +65,7 @@ router.get('/:idDissertation', VerifyToken, function(req, res) {
 
 
 // CREATE a dissertation
-router.post('/', VerifyToken, function(req, res) {
+router.post('/', auth0(), function(req, res) {
     var thisDissertation = req.body;
     if (!thisDissertation) {
         console.log("WARNING: New POST request to /dissertations/ without dissertation, sending 400...");
@@ -110,7 +111,7 @@ router.post('/', VerifyToken, function(req, res) {
 });
 
 // UPDATE a specific dissertation
-router.put('/:idDissertation', VerifyToken, function(req, res) {
+router.put('/:idDissertation', auth0(), function(req, res) {
     var thisDissertation = req.body;
     var idDissertation = req.params.idDissertation;
     if (!thisDissertation) {
@@ -144,7 +145,7 @@ router.put('/:idDissertation', VerifyToken, function(req, res) {
 });
 
 // DELETE all dissertations
-router.delete('/', VerifyToken, function(req, res) {
+router.delete('/', auth0(), function(req, res) {
     console.log("INFO: New DELETE request to /dissertations");
     Dissertation.remove({}, (err, output) => {
         if (err) {
@@ -165,7 +166,7 @@ router.delete('/', VerifyToken, function(req, res) {
 });
 
 // DELETE a specific dissertation
-router.delete('/:idDissertation', VerifyToken, function(req, res) {
+router.delete('/:idDissertation', auth0(), function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New DELETE request to /dissertations/:idDissertation without idDissertation, sending 400...");
@@ -195,14 +196,14 @@ router.delete('/:idDissertation', VerifyToken, function(req, res) {
 // NOT ALLOWED OPERATIONS
 
 // POST a specific dissertaiton
-router.post("/:idDissertation", VerifyToken, function(req, res) {
+router.post("/:idDissertation", auth0(), function(req, res) {
     var idDissertation = req.params.idDissertation;
     console.log("WARNING: New POST request to /dissertations/" + idDissertation + ", sending 405...");
     res.sendStatus(405); // method not allowed
 });
 
 // PUT over a collection
-router.put("/", VerifyToken, function(req, res) {
+router.put("/", auth0(), function(req, res) {
     console.log("WARNING: New PUT request to /dissertations, sending 405...");
     res.sendStatus(405); // method not allowed
 });
