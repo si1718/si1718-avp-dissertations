@@ -33,7 +33,7 @@
 
 
     <script type="text/javascript" src="/bower_components/angular/angular.min.js"></script>
-    <script type="text/javascript" src="/bower_components/angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 
     <script type="text/javascript" src="/bower_components/angular-animate/angular-animate.min.js"></script>
 
@@ -42,8 +42,18 @@
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    
+    
+    <script type="text/javascript" src="app.module.js"></script>
+    <script type="text/javascript" src="app.state.js"></script>
+    <script type="text/javascript" src="/layouts/navbar/navbar.controller.js"></script>
+    <script type="text/javascript" src="/home/home.state.js"></script>
+    <script type="text/javascript" src="/dissertations/dissertations.state.js"></script>
+    <script type="text/javascript" src="/dissertations/dissertations.controller.js"></script>
 
+    <!--
     <script type="text/javascript" src="dissertations-app.js"></script>
+    -->
     <script type="text/javascript" src="list-ctrl.js"></script>
     <script type="text/javascript" src="edit-ctrl.js"></script>
     <script type="text/javascript" src="graph-ctrl.js"></script>
@@ -55,34 +65,7 @@
 <body>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top navbar-red" role="navigation">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Dissertations</a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="https://si1718-dfr-researchers.herokuapp.com/#!/">Researchers</a>
-                    </li>
-                    <li>
-                        <a href="/#!/graph">Graph</a>
-                    </li>
-
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
+    <div ui-view="navbar" ng-cloak></div>
 
     <!-- Full Width Image Header with Logo -->
     <!-- Image backgrounds are set within the full-width-pics.css file. -->
@@ -96,7 +79,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <!-- Las vistas se cargan en este div por el routeProvider -->
-                    <div ng-view></div>
+                    <div ui-view="content"></div>
                     <div>
 
                     </div>
