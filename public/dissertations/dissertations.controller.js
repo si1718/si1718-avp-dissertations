@@ -47,16 +47,6 @@
         };
         
         
-        vm.deleteDissertation = function(idDissertation) {
-            $http.delete("/api/v1/dissertations/" + idDissertation)
-                .then(function(response) {
-                    loadPage();
-                    vm.successMessage = "The dissertation with id " + idDissertation + " was deleted successfully.";
-                }, function(error) {
-                    vm.errorMessage = "There was an error while deleting the dissertation with id " + idDissertation;
-                });
-        }
-
         var closeSuccess = function() {
             delete $rootScope.successMessage;
             delete vm.successMessage;
