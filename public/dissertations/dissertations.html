@@ -1,11 +1,5 @@
 <h1 class="section-heading">Dissertations</h1>
 
-<div class="row">
-    <div class="col-md-4">
-        <a href="#!/dissertations/create" class="btn btn-primary" >Create</a>
-    </div>
-</div>
-<br>
 <div ng-hide="vm.hideTable">
     <div class="row">
         <div class="col-md-6">
@@ -47,13 +41,16 @@
 
                 </td>
                 <td>
-                    <a class="btn btn-primary" href="#!/dissertations/{{dissertation.idDissertation}}/edit">Edit</button>
-            </td>
-        </tr>
-    </tbody>
+                    <a class="btn btn-warning" ui-sref="dissertations-edit.edit({idDissertation:dissertation.idDissertation})">Edit</a>
+                </td>
+                <td>
+                    <a class="btn btn-primary" ui-sref="dissertations-view({idDissertation:dissertation.idDissertation})">View</a>
+                </td>
+            </tr>
+        </tbody>
 
-</table>
+    </table>
 
-<ul uib-pagination total-items="vm.pagination.total"  items-per-page="vm.pagination.limit" total-items="vm.pagination.total" ng-model="vm.pagination.page" max-size="5" class="pagination-sm" boundary-link-numbers="true" rotate="false" ng-change="vm.loadPage()"></ul>
+    <ul uib-pagination total-items="vm.pagination.total" items-per-page="vm.pagination.limit" total-items="vm.pagination.total" ng-model="vm.pagination.page" max-size="5" class="pagination-sm" boundary-link-numbers="true" rotate="false" ng-change="vm.loadPage()"></ul>
 
 </div>

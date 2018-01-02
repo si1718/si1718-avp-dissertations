@@ -31,7 +31,7 @@
                 tutors: [],
                 author: "",
                 title: "",
-                year: 2017,
+                year: 2018,
                 keywords: []
             }
         }
@@ -135,7 +135,8 @@
                     .put("/api/v1/dissertations/" + idDissertation, dissertation)
                     .then(function(response) {
                         console.log(response);
-                        $state.go("dissertations", { successMessage: "The dissertation has been successfully updated." });
+                        $state.go("dissertations");
+                        Notification.success({ message: "The dissertation has been successfully updated.", positionY: 'bottom', positionX: 'right' });
                     }, function(error) {
                         errorsHandling(error);
                     });
@@ -145,7 +146,8 @@
                     .post("/api/v1/dissertations", vm.dissertation)
                     .then(function(response) {
                         console.log(response);
-                        $state.go("dissertations", { successMessage: "The dissertation has been successfully created." });
+                        $state.go("dissertations");
+                        Notification.success({ message: "The dissertation has been successfully created.", positionY: 'bottom', positionX: 'right' });
                     }, function(error) {
                         errorsHandling(error);
                     });

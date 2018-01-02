@@ -45,12 +45,7 @@
             }
         };
 
-        if ($stateParams.successMessage) {
-            Notification.success({ message: $stateParams.successMessage, positionY: 'bottom', positionX: 'right' });
-        }
-
         loadDissertations(1, 5, search);
-
     }
 
 })();
