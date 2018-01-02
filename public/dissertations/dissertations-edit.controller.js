@@ -3,9 +3,9 @@
         .module('DissertationsApp')
         .controller('DissertationsEditController', DissertationsEditController);
 
-    DissertationsEditController.$inject = ["$scope", "$http", "$stateParams", "$rootScope", "$location", "$uibModal", "$state"];
+    DissertationsEditController.$inject = ["$scope", "$http", "$stateParams", "$rootScope", "$location", "$uibModal", "$state", "Notification"];
 
-    function DissertationsEditController($scope, $http, $stateParams, $rootScope, $location, $modal, $state) {
+    function DissertationsEditController($scope, $http, $stateParams, $rootScope, $location, $modal, $state, Notification) {
         var vm = this;
 
         var idDissertation = $stateParams.idDissertation;
@@ -135,8 +135,7 @@
                     .put("/api/v1/dissertations/" + idDissertation, dissertation)
                     .then(function(response) {
                         console.log(response);
-                        $rootScope.successMessage = "The dissertation has been updated successfully.";
-                        $state.go("dissertations");
+                        $state.go("dissertations", { successMessage: "The dissertation has been successfully updated." });
                     }, function(error) {
                         errorsHandling(error);
                     });
@@ -146,26 +145,37 @@
                     .post("/api/v1/dissertations", vm.dissertation)
                     .then(function(response) {
                         console.log(response);
-                        $rootScope.successMessage = "The dissertation has been created successfully.";
-                        $state.go("dissertations");
+                        $state.go("dissertations", { successMessage: "The dissertation has been successfully created." });
                     }, function(error) {
                         errorsHandling(error);
                     });
             }
         }
 
+        // list of tutors validation
+        $scope.$watch(function() {
+            return vm.dissertation.tutors;
+        }, function(current) {
+            console.log(current);
+            var isValid = false;
+            if (current.length > 0) {
+                isValid = true;
+            }
+            $scope.dissertationForm.$setValidity('tutorsEmpty', isValid);
+        }, true);
+
         var errorsHandling = function(error) {
             if (error.status == "400") {
-                vm.errorMessage = "There was a problem with the dissertation identifier. Please make sure this dissertation exists."
+                Notification.error({ message: 'There was a problem with the dissertation identifier. Please make sure this dissertation exists.', positionY: 'bottom', positionX: 'right' });
             }
             else if (error.status == "422") {
-                vm.errorMessage = "There are errors in your form."
+                Notification.error({ message: "There are errors in your form.", positionY: 'bottom', positionX: 'right' });
             }
             else if (error.status == "404") {
-                vm.errorMessage = "Dissertation not found."
+                Notification.error({ message: "Dissertation not found.", delay: null, positionY: 'bottom', positionX: 'right' });
             }
             else {
-                vm.errorMessage = "An unexpected error has occurred."
+                Notification.error({ message: "An unexpected error has occurred.", delay: null, positionY: 'bottom', positionX: 'right' });
             }
         }
     }

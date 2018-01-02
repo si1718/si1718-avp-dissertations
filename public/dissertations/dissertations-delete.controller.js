@@ -3,9 +3,9 @@
         .module('DissertationsApp')
         .controller('DissertationsDeleteController', DissertationsDeleteController);
 
-    DissertationsDeleteController.$inject = ['$http', '$uibModalInstance', "$stateParams", "idDissertation"];
+    DissertationsDeleteController.$inject = ['$http', '$uibModalInstance', "$stateParams", "idDissertation", "Notification"];
 
-    function DissertationsDeleteController($http, $uibModalInstance, $stateParams, idDissertation) {
+    function DissertationsDeleteController($http, $uibModalInstance, $stateParams, idDissertation, Notification) {
         var vm = this;
         //var idDissertation = $stateParams.idDissertation;
 
@@ -15,23 +15,22 @@
             .then(function(response) {
                 vm.dissertation = response.data;
             }, function(error) {
-                //todo: controlar este error 
+                Notification.error({ message: "An unexpected error has occurred while getting this dissertation.", positionY: 'bottom', positionX: 'right' });
+                $uibModalInstance.dismiss('cancel');
             });
 
         vm.cancel = function() {
-            //$uibModalInstance.close();
             $uibModalInstance.dismiss('cancel');
-
         }
 
         vm.deleteDissertation = function() {
             $http.delete("/api/v1/dissertations/" + idDissertation)
                 .then(function(response) {
-                    //loadPage();
+                    Notification.success({ message: "The dissertation with id " + idDissertation + " was successfully deleted.", positionY: 'bottom', positionX: 'right' });
                     $uibModalInstance.close();
-                    vm.successMessage = "The dissertation with id " + idDissertation + " was successfully deleted.";
                 }, function(error) {
-                    vm.errorMessage = "There was an error while deleting the dissertation with id " + idDissertation;
+                    Notification.error({ message: "An unexpected error has occurred while deleting this dissertation.", positionY: 'bottom', positionX: 'right' });
+                    $uibModalInstance.dismiss('cancel');
                 });
         }
 

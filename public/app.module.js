@@ -3,7 +3,9 @@
         .module('DissertationsApp', [
             'ui.router',
             'ngAnimate',
-            'ui.bootstrap'
+            'ui.bootstrap',
+            'ui-notification',
+            'ngMessages'
         ]).run();
         
 })();

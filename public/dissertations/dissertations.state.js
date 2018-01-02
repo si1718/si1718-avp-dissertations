@@ -16,6 +16,10 @@
                         controller: 'DissertationsController',
                         controllerAs: 'vm'
                     }
+                },
+                params: {
+                    successMessage: false,
+                    errorMessage: false
                 }
             }).state('dissertations.delete', {
                 url: '/{idDissertation}/delete',

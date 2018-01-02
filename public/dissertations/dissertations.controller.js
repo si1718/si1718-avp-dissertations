@@ -4,9 +4,9 @@
         .module('DissertationsApp')
         .controller('DissertationsController', DissertationsController);
 
-    DissertationsController.$inject = ["$scope", "$http", "$uibModal", "$timeout", "$rootScope"];
+    DissertationsController.$inject = ["$scope", "$http", "$uibModal", "$timeout", "$rootScope", "Notification", "$stateParams"];
 
-    function DissertationsController($scope, $http, $uibModal, $timeout, $rootScope) {
+    function DissertationsController($scope, $http, $uibModal, $timeout, $rootScope, Notification, $stateParams) {
         var vm = this;
 
         var search = "";
@@ -23,11 +23,11 @@
                             vm.pagination = { total: stats.data.total, page: page, limit: limit }
                             vm.hideTable = false;
                         }, function(error) {
-                            vm.errorMessage = "An unexpected error has ocurred.";
+                            Notification.error({ message: 'An unexpected error has ocurred.', delay: null });
                             vm.hideTable = true;
                         });
                 }, function(error) {
-                    vm.errorMessage = "An unexpected error has ocurred.";
+                    Notification.error({ message: 'An unexpected error has ocurred.', delay: null });
                     vm.hideTable = true;
                 });
         };
@@ -43,20 +43,11 @@
                 search = "&search=" + vm.query;
                 loadPage();
             }
-
         };
-        
-        
-        var closeSuccess = function() {
-            delete $rootScope.successMessage;
-            delete vm.successMessage;
-        }
 
-        var closeError = function() {
-            delete vm.errorMessage;
+        if ($stateParams.successMessage) {
+            Notification.success({ message: $stateParams.successMessage, positionY: 'bottom', positionX: 'right' });
         }
-
-        vm.closeSuccess = closeSuccess;
 
         loadDissertations(1, 5, search);
 

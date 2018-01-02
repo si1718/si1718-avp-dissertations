@@ -1,14 +1,7 @@
 <h1 ng-show="vm.idDissertation" class="section-heading">Edit dissertation</h1>
 <h1 ng-hide="vm.idDissertation" class="section-heading">Create dissertation</h1>
 
-<div class="row">
-    <div ng-show="vm.errorMessage">
-        <div class="alert alert-danger fade in">
-            <strong>Error!</strong> {{ vm.errorMessage }}
-        </div>
-    </div>
-</div>
-<form ng-hide="vm.hideForm">
+<form ng-hide="vm.hideForm" novalidate name="dissertationForm">
     <div class="form-group">
         <div class="row">
             <div class="col-md-10">
@@ -27,32 +20,36 @@
                             <td ng-hide="tutor.url">{{tutor}}</td>
 
                             <td>
-                                <button class="btn btn-danger" ng-click="vm.deleteTutor($index)">Delete</button>
+                                <span class="btn btn-danger" ng-click="vm.deleteTutor($index)">Delete</span>
                             </td>
                             <td>
-                                <button ng-hide="tutor.url" class="btn btn-primary" ng-click="vm.validateTutor($index)">Validate</button>
+                                <span ng-hide="tutor.url" class="btn btn-primary" ng-click="vm.validateTutor($index)">Validate</span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="row">
+        <div class="row" >
             <div class="col-md-4">
                 <input type="text" class="form-control" id="tutorsInput" placeholder="Tutor name" ng-model="vm.tutorName">
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary" ng-click="vm.addTutor()">Add tutor</button>
+                <span class="btn btn-primary" ng-click="vm.addTutor()">Add tutor</span>
             </div>
         </div>
+        <p ng-show="vm.dissertation.tutors.length <= 0" class="red-font">You need to add at least one tutor</p>
     </div>
 
     <div class="row">
-        <div class="form-group col-md-6" ng-hide="vm.dissertation.authorName">
+        <div class="form-group col-md-6" ng-hide="vm.dissertation.authorName" ng-class="{'has-error': (dissertationForm.author.$touched || dissertationForm.$submitted) && dissertationForm.author.$invalid}">
             <label for="authorInput">Author</label>
-            <input type="text" class="form-control" id="authorInput" placeholder="Author" ng-model="vm.dissertation.author">
+            <input type="text" class="form-control" id="authorInput" placeholder="Author" ng-model="vm.dissertation.author" name="author" author-is-set="vm.dissertation.authorName">
+            <div ng-messages="dissertationForm.author.$error" ng-show="dissertationForm.author.$touched || dissertationForm.$submitted">
+                <p ng-message="authorIsSet">Please enter an author</p>
+            </div>
             <br>
-            <button class="btn btn-primary" ng-click="vm.validateAuthor(vm.dissertation.author)">Validate author</button>
+            <span class="btn btn-primary" ng-click="vm.validateAuthor(vm.dissertation.author)">Validate author</span>
         </div>
         <div class="form-group col-md-6" ng-show="vm.dissertation.authorName">
             <label for="authorInput">Author</label>
@@ -63,16 +60,23 @@
     </div>
 
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-6" ng-class="{'has-error': (dissertationForm.title.$touched || dissertationForm.$submitted) && dissertationForm.title.$invalid}">
             <label for="titleInput">Title</label>
-            <input type="text" class="form-control" id="titleInput" placeholder="Title" ng-model="vm.dissertation.title">
+            <input type="text" class="form-control" id="titleInput" placeholder="Title" ng-model="vm.dissertation.title" name="title" required>
+            <div ng-messages="dissertationForm.title.$error" ng-show="dissertationForm.title.$touched || dissertationForm.$submitted">
+                <p ng-message="required">Please enter a title</p>
+            </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-6" ng-class="{'has-error': (dissertationForm.year.$touched || dissertationForm.$submitted) && dissertationForm.year.$invalid}">
             <label for="yearInput">Year</label>
-            <input type="Number" class="form-control" id="yearInput" placeholder="Year" ng-model="vm.dissertation.year">
+            <input type="number" class="form-control" id="yearInput" placeholder="Year" ng-model="vm.dissertation.year" name="year" required>
+            <div ng-messages="dissertationForm.year.$error" ng-show="dissertationForm.year.$touched || dissertationForm.$submitted">
+                <p ng-message="required">Please enter a valid year</p>
+                <p ng-message="number">Please enter a valid year</p>
+            </div>
         </div>
     </div>
 
@@ -84,7 +88,7 @@
     </div>
 
     <div class="row">
-        <input class="btn btn-primary" type="submit" ng-click="vm.send(vm.dissertation)" value="Save" />
+        <input class="btn btn-primary" type="submit" ng-click="vm.send(vm.dissertation)" value="Save" ng-disabled="dissertationForm.$invalid" />
     </div>
 
 </form>
