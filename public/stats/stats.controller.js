@@ -8,7 +8,48 @@
     function StatsController($http, Notification) {
         var vm = this;
 
+        // TwitterKeywords stats
+        $http.get('/api/v1/stats/twitterKeywords')
+            .then(function(response) {
+                var data = response.data;
 
+                // create a sorted array of all posible date values
+                var dates = [];
+                var datesSet = new Set(data.map(x => x.date));
+                datesSet.forEach(x => {
+                    var split = x.split('/');
+                    var d = new Date(split[2], split[1] - 1, split[0]);
+                    dates.push(d);
+                });
+                dates = dates.sort(function(d1, d2) { return (d1 > d2) ? 1 : (d1 < d2) ? -1 : 0 }).map(x => x.getDate() + "/" + x.getMonth()+1 + "/" + x.getFullYear());
+
+                var keywords = [];
+                var keywordsSet = new Set(data.map(x => x.keyword));
+                keywordsSet.forEach(x => keywords.push(x));
+                
+                console.log(dates)
+                console.log(keywords)
+                console.log(data)
+
+                var series = [];
+                keywords.forEach(k => {
+                    var s = { "name": k, data: [] }
+                    dates.forEach(d => {
+                        var total = data.filter(x => (x.keyword == k && x.date == d));
+                        if (total.length > 0)
+                            s.data.push(total[0].total);
+                        else
+                            s.data.push(null);
+                    });
+                    series.push(s);
+                })
+
+                console.log(series);
+
+                loadSimpleLineChart('twitter-stats-chart', dates, series, 'Mentions in Twitter', 'Keywords');
+            }, function(error) {
+                Notification.error({ message: "Couldn't load the dissertations per year graph.", positionY: 'bottom', positionX: 'right' })
+            });
 
         // DissertationsPerYear
         $http.get('/api/v1/stats/dissertationsPerYear')
@@ -20,7 +61,7 @@
                 var years = data.map(x => x.year); // categories
                 var values = data.map(x => x.count); // data
 
-                loadSimpleLineChart('dissertations-year-chart', years, values, 'Dissertations per year', 'Dissertations');
+                loadSimpleLineChart('dissertations-year-chart', years, [{ "name": "Year", data: values }], 'Dissertations per year', 'Dissertations');
             }, function(error) {
                 Notification.error({ message: "Couldn't load the dissertations per year graph.", positionY: 'bottom', positionX: 'right' })
             });
@@ -54,7 +95,7 @@
 
     }
 
-    function loadSimpleLineChart(chartId, years, value, yLeyend, seriesName) {
+    function loadSimpleLineChart(chartId, years, series, yLeyend, seriesName) {
         Highcharts.chart(chartId, {
             title: "",
             yAxis: {
@@ -77,10 +118,7 @@
             xAxis: {
                 categories: years
             },
-            series: [{
-                name: seriesName,
-                data: value
-            }],
+            series: series,
             responsive: {
                 rules: [{
                     condition: {

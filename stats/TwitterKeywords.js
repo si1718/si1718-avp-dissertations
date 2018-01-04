@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 var TwitterKeywordsSchema = new mongoose.Schema({
     keyword: { type: String, required: true },
     count: { type: Number, required: true },
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
 }, { collection: "stats" });
 
 TwitterKeywordsSchema.index({ '$**': 'text' });
