@@ -57,14 +57,14 @@ angular.module("DissertationsApp")
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Directed dissertations'
+                        text: 'Directed dissertations' //yLeyend
                     }
                 },
                 legend: {
                     enabled: false
                 },
                 tooltip: {
-                    pointFormat: 'Directed dissertations by: <b>{point.y:.1f}</b>'
+                    pointFormat: 'Directed dissertations by: <b>{point.y:.1f}</b>' //pointFormat
                 },
                 series: [{
                     name: 'Dissertations',
