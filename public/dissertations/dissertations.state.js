@@ -44,6 +44,9 @@
                         controller: 'DissertationsEditController',
                         controllerAs: 'vm'
                     }
+                },
+                params: {
+                    newSisiusDissertation: null
                 }
             }).state('dissertations-edit.edit', {
                 url: '/dissertations/{idDissertation}/edit',
@@ -61,6 +64,16 @@
                     'content@': {
                         templateUrl: 'dissertations/dissertations-view.html',
                         controller: 'DissertationsViewController',
+                        controllerAs: 'vm'
+                    }
+                }
+            }).state('newSisiusDissertations', {
+                parent: 'app',
+                url: '/newSisiusDissertations',
+                views: {
+                    'content@': {
+                        templateUrl: 'dissertations/dissertations.html',
+                        controller: 'NewSisiusDissertationsController',
                         controllerAs: 'vm'
                     }
                 }

@@ -9,6 +9,8 @@
         var vm = this;
 
         var idDissertation = $stateParams.idDissertation;
+        var newSisiusDissertation = $stateParams.newSisiusDissertation;
+
         vm.idDissertation = idDissertation;
 
         if (idDissertation) {
@@ -26,13 +28,21 @@
                 });
         }
         else {
-            // create empty dissertation
-            vm.dissertation = {
-                tutors: [],
-                author: "",
-                title: "",
-                year: 2018,
-                keywords: []
+            if (newSisiusDissertation) {
+                delete newSisiusDissertation._id;
+                if (newSisiusDissertation.author === 'undefined')
+                    delete newSisiusDissertation.author;
+                vm.dissertation = newSisiusDissertation
+            }
+            else {
+                // create empty dissertation
+                vm.dissertation = {
+                    tutors: [],
+                    author: "",
+                    title: "",
+                    year: 2018,
+                    keywords: []
+                }
             }
         }
 
@@ -142,11 +152,26 @@
                     });
             }
             else {
+                var idNewSisiusDissertation = false;
+                if (newSisiusDissertation)
+                    idNewSisiusDissertation = newSisiusDissertation.idDissertation;
+                vm.dissertation.idDissertation;
                 $http
                     .post("/api/v1/dissertations", vm.dissertation)
                     .then(function(response) {
                         console.log(response);
-                        $state.go("dissertations");
+                        // if it was a newSisiusDissertation, then delete it from database
+                        if (idNewSisiusDissertation) {
+                            $http
+                                .delete("/api/v1/newSisiusDissertations/" + idNewSisiusDissertation)
+                                .then(function(response) { console.log("New sisius dissertation with id " + idNewSisiusDissertation + " successfully deleted.") });
+
+                            $state.go("newSisiusDissertations");
+                        }
+                        else {
+                            $state.go("dissertations");
+                        }
+
                         Notification.success({ message: "The dissertation has been successfully created.", positionY: 'bottom', positionX: 'right' });
                     }, function(error) {
                         errorsHandling(error);
@@ -175,6 +200,9 @@
             }
             else if (error.status == "404") {
                 Notification.error({ message: "Dissertation not found.", delay: null, positionY: 'bottom', positionX: 'right' });
+            }
+            else if (error.status == "409") {
+                Notification.error({ message: "This dissertation already exists. Try changing the author and the year.", delay: null, positionY: 'bottom', positionX: 'right' });
             }
             else {
                 Notification.error({ message: "An unexpected error has occurred.", delay: null, positionY: 'bottom', positionX: 'right' });
