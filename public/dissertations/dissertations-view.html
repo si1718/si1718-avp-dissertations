@@ -39,7 +39,7 @@
         <p>{{vm.dissertation.year}}</p>
     </div>
 
-    <div class="row" ng-hide="{{!vm.dissertation.keywords || vm.dissertation.keywords.length <= 0 }}">
+    <div class="row" ng-show="vm.dissertation.keywords.length">
         <label>Keywords</label>
         <p>{{vm.dissertation.keywords.join(', ')}}</p>
     </div>
