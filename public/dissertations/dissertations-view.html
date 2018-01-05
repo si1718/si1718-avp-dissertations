@@ -1,49 +1,76 @@
 <h1 ng-show="vm.idDissertation" class="section-heading">View dissertation</h1>
 
-<div class="row">
-    <label>Tutors</label>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Tutor name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="tutor in vm.dissertation.tutors">
-                <td ng-show="tutor.url"><a href="{{tutor.viewURL}}">{{ tutor.name }}</a></td>
-                <td ng-hide="tutor.url">{{tutor}}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="row">
-    <label>Author</label>
-    <div ng-hide="vm.dissertation.authorName">
-        <p>{{vm.dissertation.author}}</p>
+<div class="col-sm-5">
+    <div class="row">
+        <label>Tutors</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tutor name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="tutor in vm.dissertation.tutors">
+                    <td ng-show="tutor.url"><a href="{{tutor.viewURL}}">{{ tutor.name }}</a></td>
+                    <td ng-hide="tutor.url">{{tutor}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <div ng-show="vm.dissertation.authorName">
-        <p><a href="{{vm.dissertation.authorViewURL}}">{{vm.dissertation.authorName}}</a></p>
-        <br>
+
+    <div class="row">
+        <label>Author</label>
+        <div ng-hide="vm.dissertation.authorName">
+            <p>{{vm.dissertation.author}}</p>
+        </div>
+        <div ng-show="vm.dissertation.authorName">
+            <p><a href="{{vm.dissertation.authorViewURL}}">{{vm.dissertation.authorName}}</a></p>
+            <br>
+        </div>
     </div>
+
+    <div class="row">
+        <label>Title</label>
+        <p>{{vm.dissertation.title}}</p>
+    </div>
+
+    <div class="row">
+        <label>Year</label>
+        <p>{{vm.dissertation.year}}</p>
+    </div>
+
+    <div class="row" ng-hide="{{!vm.dissertation.keywords || vm.dissertation.keywords.length <= 0 }}">
+        <label>Keywords</label>
+        <p>{{vm.dissertation.keywords.join(', ')}}</p>
+    </div>
+
+    <div class="row">
+        <a class="btn btn-warning" ui-sref="dissertations-edit.edit({idDissertation:vm.dissertation.idDissertation})">Edit</a>
+        <a class="btn btn-primary" ui-sref="dissertations">Go to list</a>
+    </div>
+
 </div>
 
-<div class="row">
-    <label>Title</label>
-    <p>{{vm.dissertation.title}}</p>
-</div>
+<div class="col-sm-6 col-md-offset-1">
+    <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
+    <div ng-show="vm.recommendations.length" class="row">
+        <label>Recommendations</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Author</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="dissertation in vm.recommendations">
+                    <td ng-show="dissertation.authorViewURL"><a href="{{dissertation.authorViewURL}}">{{ dissertation.authorName }}</a></td>
+                    <td ng-hide="dissertation.authorViewURL">{{dissertation.author}}</td>
+                    <td>{{dissertation.title}}</td>
+                    <td><a class="btn btn-primary" ui-sref="dissertations-view({idDissertation:dissertation.idDissertation})">View</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-<div class="row">
-    <label>Year</label>
-    <p>{{vm.dissertation.year}}</p>
-</div>
-
-<div class="row" ng-hide="{{!vm.dissertation.keywords || vm.dissertation.keywords.length <= 0 }}">
-    <label>Keywords</label>
-    <p>{{vm.dissertation.keywords.join(', ')}}</p>
-</div>
-
-<div class="row">
-    <a class="btn btn-warning" ui-sref="dissertations-edit.edit({idDissertation:vm.dissertation.idDissertation})">Edit</a>
-    <a class="btn btn-primary" ui-sref="dissertations">Go to list</a>
 </div>

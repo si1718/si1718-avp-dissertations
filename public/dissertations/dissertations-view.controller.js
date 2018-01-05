@@ -18,12 +18,28 @@
                 .then(function(response) {
                     var thisDissertation = response.data;
                     vm.dissertation = thisDissertation;
+                    $http
+                        .get("/api/v1/dissertations/recommendations/" + idDissertation)
+                        .then(function(response) {
+                            var idDissertations = response.data;
+                            vm.recommendations = [];
+                            idDissertations.forEach(x => {
+                                console.log(x);
+                                $http
+                                    .get("/api/v1/dissertations/" + x)
+                                    .then(function(response) {
+                                        vm.recommendations.push(response.data);
+                                    });
+                            });
+                        }, function(error) {
+                            Notification.error({ message: "An error has occurred when retrieving recommendations.", delay: null, positionY: 'bottom', positionX: 'right' });
+                        });
                 }, function(error) {
                     errorsHandling(error);
                 });
         }
         else
-            errorsHandling({status: "404"});
+            errorsHandling({ status: "404" });
 
         var errorsHandling = function(error) {
             if (error.status == "400") {
