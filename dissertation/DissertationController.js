@@ -8,6 +8,7 @@ router.use(bodyParser.json()); //configura dentro de express el middleware bodyp
 router.use(helmet()); //improve security
 
 var Dissertation = require("./Dissertation");
+var Recommendation = require("./Recommendation");
 
 // RETRIEVE all dissertations
 router.get('/', function(req, res) {
@@ -110,7 +111,7 @@ router.post('/', function(req, res) {
             res.sendStatus(422); // unprocessable entity
         }
         else {
-            if(utils.isUrl(req.body.author))
+            if (utils.isUrl(req.body.author))
                 var idDissertation = utils.generateDissertationId(req.body.authorName, req.body.year);
             else
                 var idDissertation = utils.generateDissertationId(req.body.author, req.body.year);
@@ -123,7 +124,7 @@ router.post('/', function(req, res) {
                 year: thisDissertation.year,
                 idDissertation: idDissertation,
                 keywords: thisDissertation.keywords,
-                viewURL: "https://si1718-avp-dissertations.herokuapp.com/#!/dissertations/"+idDissertation+"/edit"
+                viewURL: "https://si1718-avp-dissertations.herokuapp.com/#!/dissertations/" + idDissertation + "/edit"
             }, (err, dissertation) => {
                 if (err) {
                     if (err.name == "ValidationError") {
@@ -246,6 +247,33 @@ router.put("/", function(req, res) {
     res.sendStatus(405); // method not allowed
 });
 
+// Other endpoints regarding other functional requirements on dissertations
+
+// RETRIEVE a list of recommendations given an idDissertation
+router.get("/recommendations/:idDissertation", function(req, res) {
+    var idDissertation = req.params.idDissertation;
+    if (!idDissertation) {
+        console.log("WARNING: New GET request to /dissertations/recommendations/:idDissertation without idDissertation, sending 400...");
+        res.sendStatus(400);
+    }
+    else {
+        Recommendation.findOne({ 'idDissertation': idDissertation }, (err, element) => {
+            if (err) {
+                console.error('WARNING: Error getting data from DB => ' + err);
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                console.log("INFO: New GET request to /dissertations/recommendations");
+                if (element) {
+                    res.send(element.recommendations);
+                }
+                else {
+                    res.send([]); // There're not recommendations
+                }
+            }
+        });
+    }
+});
 
 
 module.exports = router;
