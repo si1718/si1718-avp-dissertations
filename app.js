@@ -23,9 +23,6 @@ var NewSisiusDissertationController = require("./newSisiusDissertation/NewSisius
 app.use(BASE_API_PATH + "/newSisiusDissertations", NewSisiusDissertationController);
 
 // API v1.1 controllers
-var AuthController = require('./auth/AuthController');
-app.use(BASE_AUTH_API_PATH + '/auth', AuthController);
-
 var DissertationAuthController = require("./dissertation/DissertationAuthController");
 app.use(BASE_AUTH_API_PATH + '/dissertations', DissertationAuthController);
 

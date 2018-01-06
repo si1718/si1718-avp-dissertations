@@ -3,40 +3,75 @@ var router = express.Router();
 var helmet = require("helmet");
 var bodyParser = require("body-parser");
 var utils = require("./../utils.js");
-var VerifyToken = require('../auth/VerifyToken');
-var auth0 = require('../auth/auth0')
+var checkJwt = require("./../auth/auth0.js").checkJwt;
+var checkScopes = require("./../auth/auth0.js").checkScopes;
+var expressJwtErrorHandling = require("./../auth/auth0.js").expressJwtErrorHandling;
 
 router.use(bodyParser.json()); //configura dentro de express el middleware bodyparser json
 router.use(helmet()); //improve security
 
 var Dissertation = require("./Dissertation");
+var Recommendation = require("./Recommendation");
 
 // RETRIEVE all dissertations
-router.get('/', auth0(), function(req, res) {
-    var offset = 0;
-    var limit = 5;
+router.get('/', checkJwt, checkScopes(['read:dissertations']), function(req, res) {
     var query = {};
-    if (req.query.offset)
-        offset = parseInt(req.query.offset);
-    if (req.query.limit)
-        limit = parseInt(req.query.limit);
+    var offset = req.query.offset;
+    var limit = req.query.limit
+
     if (req.query.search)
         query.$text = { $search: req.query.search };
 
-    Dissertation.paginate(query, { offset: offset, limit: limit }, (err, elements) => {
+    if (offset || limit) {
+        if (!offset)
+            offset = 0;
+        if (!limit)
+            limit = 10;
+        Dissertation.paginate(query, { offset: parseInt(offset), limit: parseInt(limit) }, (err, elements) => {
+            if (err) {
+                console.error('WARNING: Error getting data from DB => ' + err);
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                console.log("INFO: New GET request to /dissertations . Query: " + JSON.stringify(query));
+                res.send(elements.docs);
+            }
+        });
+    }
+    else {
+        Dissertation.find(query, (err, elements) => {
+            if (err) {
+                console.error('WARNING: Error getting data from DB => ' + err);
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                console.log("INFO: New GET request to /dissertations . Query: " + JSON.stringify(query));
+                res.send(elements);
+            }
+        });
+    }
+});
+
+// RETRIEVE stats
+router.get('/stats', checkJwt, checkScopes(['read:dissertations']), function(req, res) {
+    var query = {};
+    if (req.query.search)
+        query.$text = { $search: req.query.search };
+
+    Dissertation.count(query, (err, result) => {
         if (err) {
-            console.error('WARNING: Error getting data from DB => ' + err);
+            console.error('WARNING: Error getting count from DB => ' + err);
             res.sendStatus(500); // internal server error
         }
         else {
-            console.log("INFO: New GET request to /dissertations . Offset " + offset + ". Query: " + JSON.stringify(query));
-            res.send(elements);
+            console.log("INFO: New GET request to /dissertations/stats . Total: " + result);
+            res.status(200).send({ total: result });
         }
     });
 });
 
 // RETRIEVE a specific dissertation
-router.get('/:idDissertation', auth0(), function(req, res) {
+router.get('/:idDissertation', checkJwt, checkScopes(['read:dissertations']), function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New GET request to /dissertations/:idDissertation without idDissertation, sending 400...");
@@ -65,7 +100,7 @@ router.get('/:idDissertation', auth0(), function(req, res) {
 
 
 // CREATE a dissertation
-router.post('/', auth0(), function(req, res) {
+router.post('/', checkJwt, checkScopes(['edit:dissertations']), function(req, res) {
     var thisDissertation = req.body;
     if (!thisDissertation) {
         console.log("WARNING: New POST request to /dissertations/ without dissertation, sending 400...");
@@ -79,13 +114,20 @@ router.post('/', auth0(), function(req, res) {
             res.sendStatus(422); // unprocessable entity
         }
         else {
-            var idDissertation = utils.generateDissertationId(req.body.author, req.body.year);
+            if (utils.isUrl(req.body.author))
+                var idDissertation = utils.generateDissertationId(req.body.authorName, req.body.year);
+            else
+                var idDissertation = utils.generateDissertationId(req.body.author, req.body.year);
             Dissertation.create({
                 tutors: thisDissertation.tutors,
                 author: thisDissertation.author,
+                authorName: thisDissertation.authorName,
+                authorViewURL: thisDissertation.authorViewURL,
                 title: thisDissertation.title,
                 year: thisDissertation.year,
-                idDissertation: idDissertation
+                idDissertation: idDissertation,
+                keywords: thisDissertation.keywords,
+                viewURL: "https://si1718-avp-dissertations.herokuapp.com/#!/dissertations/" + idDissertation + "/edit"
             }, (err, dissertation) => {
                 if (err) {
                     if (err.name == "ValidationError") {
@@ -111,7 +153,7 @@ router.post('/', auth0(), function(req, res) {
 });
 
 // UPDATE a specific dissertation
-router.put('/:idDissertation', auth0(), function(req, res) {
+router.put('/:idDissertation', checkJwt, checkScopes(['edit:dissertations']), function(req, res) {
     var thisDissertation = req.body;
     var idDissertation = req.params.idDissertation;
     if (!thisDissertation) {
@@ -145,7 +187,7 @@ router.put('/:idDissertation', auth0(), function(req, res) {
 });
 
 // DELETE all dissertations
-router.delete('/', auth0(), function(req, res) {
+router.delete('/', checkJwt, checkScopes(['delete:dissertations']), function(req, res) {
     console.log("INFO: New DELETE request to /dissertations");
     Dissertation.remove({}, (err, output) => {
         if (err) {
@@ -166,7 +208,7 @@ router.delete('/', auth0(), function(req, res) {
 });
 
 // DELETE a specific dissertation
-router.delete('/:idDissertation', auth0(), function(req, res) {
+router.delete('/:idDissertation', checkJwt, checkScopes(['delete:dissertations']), function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New DELETE request to /dissertations/:idDissertation without idDissertation, sending 400...");
@@ -196,17 +238,46 @@ router.delete('/:idDissertation', auth0(), function(req, res) {
 // NOT ALLOWED OPERATIONS
 
 // POST a specific dissertaiton
-router.post("/:idDissertation", auth0(), function(req, res) {
+router.post("/:idDissertation", function(req, res) {
     var idDissertation = req.params.idDissertation;
     console.log("WARNING: New POST request to /dissertations/" + idDissertation + ", sending 405...");
     res.sendStatus(405); // method not allowed
 });
 
 // PUT over a collection
-router.put("/", auth0(), function(req, res) {
+router.put("/", function(req, res) {
     console.log("WARNING: New PUT request to /dissertations, sending 405...");
     res.sendStatus(405); // method not allowed
 });
 
+// Other endpoints regarding other functional requirements on dissertations
+
+// RETRIEVE a list of recommendations given an idDissertation
+router.get("/recommendations/:idDissertation", checkJwt, checkScopes(['read:dissertations']), function(req, res) {
+    var idDissertation = req.params.idDissertation;
+    if (!idDissertation) {
+        console.log("WARNING: New GET request to /dissertations/recommendations/:idDissertation without idDissertation, sending 400...");
+        res.sendStatus(400);
+    }
+    else {
+        Recommendation.findOne({ 'idDissertation': idDissertation }, (err, element) => {
+            if (err) {
+                console.error('WARNING: Error getting data from DB => ' + err);
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                console.log("INFO: New GET request to /dissertations/recommendations");
+                if (element) {
+                    res.send(element.recommendations);
+                }
+                else {
+                    res.send([]); // There're not recommendations
+                }
+            }
+        });
+    }
+});
+
+router.use(expressJwtErrorHandling);
 
 module.exports = router;
