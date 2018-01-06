@@ -4,9 +4,9 @@
         .module('DissertationsApp')
         .controller('DissertationsController', DissertationsController);
 
-    DissertationsController.$inject = ["$scope", "$http", "$uibModal", "$timeout", "$rootScope", "Notification", "$stateParams"];
+    DissertationsController.$inject = ["$scope", "$http", "$uibModal", "$timeout", "$rootScope", "Notification", "$stateParams", "authService"];
 
-    function DissertationsController($scope, $http, $uibModal, $timeout, $rootScope, Notification, $stateParams) {
+    function DissertationsController($scope, $http, $uibModal, $timeout, $rootScope, Notification, $stateParams, authService) {
         var vm = this;
 
         var search = "";

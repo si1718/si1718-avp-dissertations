@@ -6,8 +6,8 @@
             'ui.bootstrap',
             'ui-notification',
             'ngMessages'
-        ]).run(function($state, $rootScope){
+        ]).run(function($state, $rootScope) {
             $rootScope.$state = $state;
         });
-        
+
 })();

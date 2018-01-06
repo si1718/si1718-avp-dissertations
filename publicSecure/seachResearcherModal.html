@@ -1,0 +1,38 @@
+<!-- Modal content-->
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">&times;</button>
+        <h4 class="modal-title">Select a researcher</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div ng-show="errorMessage">
+                <div class="alert alert-danger fade in">
+                    <strong>Error!</strong> {{ errorMessage }}
+                </div>
+            </div>
+        </div>
+
+        <table class="table" ng-show="showTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="researcher in researchers">
+                    <td>{{researcher.idResearcher}}</td>
+                    <td>{{researcher.name}}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" ng-click="ok(researcher)">Select</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+    </div>
+</div>

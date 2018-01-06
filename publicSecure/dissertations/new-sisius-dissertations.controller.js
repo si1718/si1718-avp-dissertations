@@ -2,22 +2,20 @@
 
     angular
         .module('DissertationsApp')
-        .controller('DissertationsController', DissertationsController);
+        .controller('NewSisiusDissertationsController', NewSisiusDissertationsController);
 
-    DissertationsController.$inject = ["$scope", "$http", "$uibModal", "$timeout", "$rootScope", "Notification", "$stateParams"];
+    NewSisiusDissertationsController.$inject = ["$scope", "$http", "$uibModal", "$timeout", "$rootScope", "Notification", "$stateParams", "$state"];
 
-    function DissertationsController($scope, $http, $uibModal, $timeout, $rootScope, Notification, $stateParams) {
+    function NewSisiusDissertationsController($scope, $http, $uibModal, $timeout, $rootScope, Notification, $stateParams, $state) {
         var vm = this;
 
-        var search = "";
-        
-        var loadDissertations = function(page, limit, search) {
+        var loadDissertations = function(page, limit) {
             $http
-                .get("/api/v1/dissertations?offset=" + ((page - 1) * limit) + "&limit=" + limit + search)
+                .get("/api/v1/newSisiusDissertations?offset=" + ((page - 1) * limit) + "&limit=" + limit)
                 .then(function(response) {
                     // get count of elements in db for this query
                     $http
-                        .get('/api/v1/dissertations/stats' + search.replace("&", "?"))
+                        .get('/api/v1/newSisiusDissertations/stats')
                         .then(function(stats) {
                             vm.dissertations = response.data;
                             vm.pagination = { total: stats.data.total, page: page, limit: limit }
@@ -33,19 +31,17 @@
         };
 
         var loadPage = function() {
-            loadDissertations(vm.pagination.page, 5, search);
+            loadDissertations(vm.pagination.page, 5);
         };
+
+        vm.toCreateDissertationState = function(dissertation) {
+            console.log("FDFDFD");
+            $state.go('dissertations-edit.create', {newSisiusDissertation: dissertation});
+        }
 
         vm.loadPage = loadPage;
 
-        vm.search = function() {
-            if (vm.query) {
-                search = "&search=" + vm.query;
-                loadPage();
-            }
-        };
-
-        loadDissertations(1, 5, search);
+        loadDissertations(1, 5);
     }
 
 })();

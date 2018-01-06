@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="DissertationsApp">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dissertations</title>
+
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+
+    <!-- Custom CSS -->
+    <link href="vendor/css/full-width-pics.css" rel="stylesheet">
+    <link href="vendor/css/custom-bootstrap.css" rel="stylesheet">
+
+    <link href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css" rel="stylesheet">
+
+    <!-- Angular-bootstrap -->
+    <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css" type="text/css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+    <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+
+    <script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>
+
+    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
+
+    <script type="text/javascript" src="bower_components/angular-messages/angular-messages.js"></script>
+
+    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+    <script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <!-- Auth0 dependencies -->
+    <script type="text/javascript" src="https://cdn.auth0.com/js/auth0/9.0.1/auth0.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-auth0/dist/angular-auth0.min.js"></script>
+
+    <!-- Application dependencies -->
+    <script type="text/javascript" src="app.module.js"></script>
+    <script type="text/javascript" src="app.state.js"></script>
+    <script type="text/javascript" src="layouts/navbar/navbar.controller.js"></script>
+    <script type="text/javascript" src="home/home.state.js"></script>
+    <script type="text/javascript" src="dissertations/dissertations.state.js"></script>
+    <script type="text/javascript" src="dissertations/dissertations.controller.js"></script>
+    <script type="text/javascript" src="dissertations/dissertations-edit.controller.js"></script>
+    <script type="text/javascript" src="dissertations/dissertations-delete.controller.js"></script>
+    <script type="text/javascript" src="dissertations/dissertations-view.controller.js"></script>
+    <script type="text/javascript" src="dissertations/dissertations-view.controller.js"></script>
+    <script type="text/javascript" src="stats/stats.state.js"></script>
+    <script type="text/javascript" src="stats/stats.controller.js"></script>
+    <script type="text/javascript" src="dissertations/new-sisius-dissertations.controller.js"></script>
+    <script type="text/javascript" src="callback/callback.controller.js"></script>
+    <script type="text/javascript" src="callback/callback.state.js"></script>
+    <script type="text/javascript" src="services/auth.service.js"></script>
+
+    <!-- TODO Delete except search-researcher-modal-ctrl -->
+    <script type="text/javascript" src="graph-ctrl.js"></script>
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="search-researcher-modal-ctrl.js"></script>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <div ui-view="navbar" ng-cloak></div>
+
+    <!-- Full Width Image Header with Logo -->
+    <!-- Image backgrounds are set within the full-width-pics.css file. -->
+    <header class="image-bg-fluid-height">
+        <img class="img-responsive img-center" src="vendor/images/logo_us.png" alt="">
+    </header>
+
+    <!-- Content Section -->
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Las vistas se cargan en este div por el routeProvider -->
+                    <div ui-view="content"></div>
+                    <div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Universidad de Sevilla 2018</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </footer>
+
+</body>
+
+</html>

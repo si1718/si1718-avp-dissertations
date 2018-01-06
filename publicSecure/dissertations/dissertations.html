@@ -1,0 +1,64 @@
+<span ng-show="$state.includes('dissertations')">
+    <h1 class="section-heading">Dissertations</h1>
+</span>
+<span ng-show="$state.includes('newSisiusDissertations')">
+    <h1 class="section-heading">New dissertations from SISIUS</h1>
+    <p class="section-paragraph">We've found these dissertations that you could be interested in adding to the system.</p>
+</span>
+
+<div ng-hide="vm.hideTable">
+    <div class="row" ng-show="$state.includes('dissertations')">
+        <div class="col-md-6">
+            <input class="form-control" ng-model="vm.query" name="Search"></input>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary" ng-click="vm.search()">Search</button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th ng-show="$state.includes('dissertations')">ID</th>
+                <th>Tutors</th>
+                <th>Author</th>
+                <th>Title</th>
+                <th>Year</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="dissertation in vm.dissertations">
+                <td ng-show="$state.includes('dissertations')">{{dissertation.idDissertation}}</td>
+                <td>
+                    <p ng-repeat="tutor in dissertation.tutors">
+                        <span ng-show="tutor.url"><a href="{{tutor.viewURL}}">{{ tutor.name }}</a></span>
+                        <span ng-hide="tutor.url">{{tutor}}</span>
+                    </p>
+                </td>
+                <td>
+                    <span ng-show="dissertation.authorName"><a href="{{dissertation.authorViewURL}}">{{ dissertation.authorName }}</a></span>
+                    <span ng-hide="dissertation.authorName">{{dissertation.author}}</span>
+                </td>
+                <td>{{dissertation.title}}</td>
+                <td>{{dissertation.year}}</td>
+                <td ng-show="$state.includes('dissertations')">
+                    <a class="btn btn-danger" ui-sref="dissertations.delete({idDissertation:dissertation.idDissertation})">Delete</a>
+                </td>
+                <td ng-show="$state.includes('dissertations')">
+                    <a class="btn btn-warning" ui-sref="dissertations-edit.edit({idDissertation:dissertation.idDissertation})">Edit</a>
+                </td>
+                <td ng-show="$state.includes('dissertations')">
+                    <a class="btn btn-primary" ui-sref="dissertations-view({idDissertation:dissertation.idDissertation})">View</a>
+                </td>
+                <td ng-show="$state.includes('newSisiusDissertations')">
+                    <a class="btn btn-primary" ng-click="vm.toCreateDissertationState(dissertation)">Add</a>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+    <ul uib-pagination total-items="vm.pagination.total" items-per-page="vm.pagination.limit" total-items="vm.pagination.total" ng-model="vm.pagination.page" max-size="5" class="pagination-sm" boundary-link-numbers="true" rotate="false" ng-change="vm.loadPage()"></ul>
+
+</div>

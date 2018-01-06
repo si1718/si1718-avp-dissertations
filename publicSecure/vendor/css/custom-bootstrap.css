@@ -1,0 +1,20 @@
+.navbar-red {
+    background-color: #41000C !important;
+}
+
+.navbar-red .dropdown-menu li a {
+    color: #000000 !important;
+}
+
+.navbar-red li a,
+.navbar-red .navbar-brand {
+    color: #ffffff !important;
+}
+
+p[ng-message] {
+    color: red;
+}
+
+.red-font {
+    color:red;
+}
