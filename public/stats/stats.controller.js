@@ -21,12 +21,12 @@
                     var d = new Date(split[2], split[1] - 1, split[0]);
                     dates.push(d);
                 });
-                dates = dates.sort(function(d1, d2) { return (d1 > d2) ? 1 : (d1 < d2) ? -1 : 0 }).map(x => x.getDate() + "/" + x.getMonth()+1 + "/" + x.getFullYear());
+                dates = dates.sort(function(d1, d2) { return (d1 > d2) ? 1 : (d1 < d2) ? -1 : 0 }).map(x => x.getDate() + "/" + x.getMonth() + 1 + "/" + x.getFullYear());
 
                 var keywords = [];
                 var keywordsSet = new Set(data.map(x => x.keyword));
                 keywordsSet.forEach(x => keywords.push(x));
-                
+
                 console.log(dates)
                 console.log(keywords)
                 console.log(data)
@@ -46,7 +46,7 @@
 
                 console.log(series);
 
-                loadSimpleLineChart('twitter-stats-chart', dates, series, 'Mentions in Twitter', 'Keywords');
+                loadSimpleLineChart('twitter-stats-chart', dates, series, 'Mentions in Twitter (logarithmic scale)', 'Keywords', true);
             }, function(error) {
                 Notification.error({ message: "Couldn't load the dissertations per year graph.", positionY: 'bottom', positionX: 'right' })
             });
@@ -95,8 +95,9 @@
 
     }
 
-    function loadSimpleLineChart(chartId, years, series, yLeyend, seriesName) {
-        Highcharts.chart(chartId, {
+    function loadSimpleLineChart(chartId, years, series, yLeyend, seriesName, logarithmic = false) {
+
+        var config = {
             title: "",
             yAxis: {
                 title: {
@@ -133,7 +134,12 @@
                     }
                 }]
             }
-        });
+        };
+
+        if (logarithmic)
+            config.yAxis.type = 'logarithmic';
+
+        Highcharts.chart(chartId, config);
     }
 
     function loadSimpleBarChart(chartId, data, yLeyend, pointFormat, seriesName) {
