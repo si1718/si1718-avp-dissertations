@@ -14,7 +14,7 @@
                 domain: 'si1718-avp-dissertations.eu.auth0.com',
                 responseType: 'token id_token',
                 audience: 'https://si1718-avp-dissertations.eu.auth0.com/userinfo',
-                redirectUri: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/secure/#!/',
+                redirectUri: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/secure/#!/callback',
                 scope: 'openid'
             });
         });
