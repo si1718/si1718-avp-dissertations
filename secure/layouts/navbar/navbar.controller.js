@@ -3,11 +3,16 @@
         .module('DissertationsApp')
         .controller('NavbarController', NavbarController);
         
-        NavbarController.$inject = ['authService'];
+        NavbarController.$inject = ['authService', '$state'];
         
-        function NavbarController(authService) {
+        function NavbarController(authService, $state) {
             var vm = this;
             vm.auth = authService;
+            
+            vm.logout = function() {
+                authService.logout();
+                $state.go('home');
+            }
         }
         
 })();

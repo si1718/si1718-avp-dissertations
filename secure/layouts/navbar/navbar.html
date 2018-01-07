@@ -32,7 +32,10 @@
                     <a href ng-if="!vm.auth.isAuthenticated()" ng-click="vm.auth.login()">Log in</a>
                 </li>
                 <li>
-                    <a href ng-if="vm.auth.isAuthenticated()" ng-click="vm.auth.logout()">Log out</a>
+                    <a ng-if="vm.auth.isAuthenticated()" ui-sref="profile">Profile</a>
+                </li>
+                <li>
+                    <a href ng-if="vm.auth.isAuthenticated()" ng-click="vm.logout()">Log out</a>
                 </li>
             </ul>
         </div>
