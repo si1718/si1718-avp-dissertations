@@ -3,9 +3,9 @@
         .module('DissertationsApp')
         .config(stateConfig);
 
-    stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+    stateConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
-    function stateConfig($stateProvider, $urlRouterProvider) {
+    function stateConfig($stateProvider, $urlRouterProvider, $locationProvider) {
         $stateProvider.state('app', {
             views: {
                 'navbar': {
@@ -17,5 +17,6 @@
         });
         
         $urlRouterProvider.otherwise('/');
+        $locationProvider.hashPrefix('');
     }
 })();

@@ -16,7 +16,7 @@
         if (idDissertation) {
             // call the api and get the dissertation
             $http
-                .get("/api/v1/dissertations/" + idDissertation)
+                .get("/api/v1.1/dissertations/" + idDissertation)
                 .then(function(response) {
                     var thisDissertation = response.data;
                     if (!thisDissertation.keywords)
@@ -142,7 +142,7 @@
             if (idDissertation) {
                 delete dissertation._id;
                 $http
-                    .put("/api/v1/dissertations/" + idDissertation, dissertation)
+                    .put("/api/v1.1/dissertations/" + idDissertation, dissertation)
                     .then(function(response) {
                         console.log(response);
                         $state.go("dissertations");
@@ -157,13 +157,13 @@
                     idNewSisiusDissertation = newSisiusDissertation.idDissertation;
                 vm.dissertation.idDissertation;
                 $http
-                    .post("/api/v1/dissertations", vm.dissertation)
+                    .post("/api/v1.1/dissertations", vm.dissertation)
                     .then(function(response) {
                         console.log(response);
                         // if it was a newSisiusDissertation, then delete it from database
                         if (idNewSisiusDissertation) {
                             $http
-                                .delete("/api/v1/newSisiusDissertations/" + idNewSisiusDissertation)
+                                .delete("/api/v1.1/newSisiusDissertations/" + idNewSisiusDissertation)
                                 .then(function(response) { console.log("New sisius dissertation with id " + idNewSisiusDissertation + " successfully deleted.") });
 
                             $state.go("newSisiusDissertations");
@@ -203,6 +203,10 @@
             }
             else if (error.status == "409") {
                 Notification.error({ message: "This dissertation already exists. Try changing the author and the year.", delay: null, positionY: 'bottom', positionX: 'right' });
+            }
+            else if (error.status == 401) {
+                Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right', delay: "10000" });
+                $state.go("home")
             }
             else {
                 Notification.error({ message: "An unexpected error has occurred.", delay: null, positionY: 'bottom', positionX: 'right' });

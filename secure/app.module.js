@@ -12,24 +12,25 @@
         .config(config)
         .run(run);
 
-    config.$inject = ['angularAuth0Provider', 'jwtOptionsProvider'];
+    config.$inject = ['angularAuth0Provider', 'jwtOptionsProvider', '$httpProvider'];
     run.$inject = ['$state', '$rootScope', 'authService'];
 
-    function config(angularAuth0Provider, jwtOptionsProvider) {
+    function config(angularAuth0Provider, jwtOptionsProvider, $httpProvider) {
         angularAuth0Provider.init({
             clientID: 'Ox85DK2tYEz45ZZl4LY1xAp3x2IFUaIO',
             domain: 'si1718-avp-dissertations.eu.auth0.com',
             responseType: 'token id_token',
-            audience: 'https://si1718-avp-dissertations.eu.auth0.com/userinfo',
-            redirectUri: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/secure/#!/'
-            //scope: 'token id_token'
+            audience: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/',
+            redirectUri: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/secure/#',
+            scope: 'openid profile'
         });
 
         jwtOptionsProvider.config({
             tokenGetter: function() {
-                return localStorage.getItem('id_token');
+                return localStorage.getItem('access_token');
             }
         });
+        $httpProvider.interceptors.push('jwtInterceptor');
     }
 
     function run($state, $rootScope, authService) {

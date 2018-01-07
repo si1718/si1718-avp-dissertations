@@ -3,13 +3,13 @@
         .module('DissertationsApp')
         .controller('StatsController', StatsController);
 
-    StatsController.$inject = ["$http", "Notification"];
+    StatsController.$inject = ["$http", "Notification", "$state"];
 
-    function StatsController($http, Notification) {
+    function StatsController($http, Notification, $state) {
         var vm = this;
 
         // TwitterKeywords stats
-        $http.get('/api/v1/stats/twitterKeywords')
+        $http.get('/api/v1.1/stats/twitterKeywords')
             .then(function(response) {
                 var data = response.data;
 
@@ -27,10 +27,6 @@
                 var keywordsSet = new Set(data.map(x => x.keyword));
                 keywordsSet.forEach(x => keywords.push(x));
 
-                console.log(dates)
-                console.log(keywords)
-                console.log(data)
-
                 var series = [];
                 keywords.forEach(k => {
                     var s = { "name": k, data: [] }
@@ -44,15 +40,18 @@
                     series.push(s);
                 })
 
-                console.log(series);
-
                 loadSimpleLineChart('twitter-stats-chart', dates, series, 'Mentions in Twitter (logarithmic scale)', 'Keywords', true);
             }, function(error) {
-                Notification.error({ message: "Couldn't load the dissertations per year graph.", positionY: 'bottom', positionX: 'right' })
+                if (error.status == 401) {
+                    Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right', delay: "10000" });
+                    $state.go("home")
+                }
+                else
+                    Notification.error({ message: "Couldn't load the dissertations per year graph.", positionY: 'bottom', positionX: 'right' })
             });
 
         // DissertationsPerYear
-        $http.get('/api/v1/stats/dissertationsPerYear')
+        $http.get('/api/v1.1/stats/dissertationsPerYear')
             .then(function(response) {
                 var data = response.data;
                 // sorts by year asc
@@ -63,11 +62,16 @@
 
                 loadSimpleLineChart('dissertations-year-chart', years, [{ "name": "Year", data: values }], 'Dissertations per year', 'Dissertations');
             }, function(error) {
-                Notification.error({ message: "Couldn't load the dissertations per year graph.", positionY: 'bottom', positionX: 'right' })
+                if (error.status == 401) {
+                    Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right', delay: "10000" });
+                    $state.go("home")
+                }
+                else
+                    Notification.error({ message: "Couldn't load the dissertations per year graph.", positionY: 'bottom', positionX: 'right' })
             });
 
         // DissertationsPerTutor
-        $http.get('/api/v1/stats/dissertationsPerTutor')
+        $http.get('/api/v1.1/stats/dissertationsPerTutor')
             .then(function(response) {
                 var data = response.data;
                 // sorts by year asc
@@ -76,11 +80,16 @@
 
                 loadSimpleBarChart('dissertations-tutors-chart', data, 'Directed dissertations', 'Directed dissertations by: <b>{point.y:.1f}</b>', 'Dissertations')
             }, function(error) {
-                Notification.error({ message: "Couldn't load the dissertations per tutor graph.", positionY: 'bottom', positionX: 'right' })
+                if (error.status == 401) {
+                    Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right', delay: "10000" });
+                    $state.go("home")
+                }
+                else
+                    Notification.error({ message: "Couldn't load the dissertations per tutor graph.", positionY: 'bottom', positionX: 'right' })
             });
 
         // MostFrequentKeywords
-        $http.get('/api/v1/stats/mostFrequentKeywords')
+        $http.get('/api/v1.1/stats/mostFrequentKeywords')
             .then(function(response) {
                 var data = response.data;
 
@@ -90,7 +99,12 @@
 
                 loadSimpleBarChart('most-frequent-keywords-chart', data, 'Number of dissertations with this keyword', 'Frequence of the keyword: <b>{point.y:.1f}</b>', 'Keywords')
             }, function(error) {
-                Notification.error({ message: "Couldn't load the most frequent keywords graph.", positionY: 'bottom', positionX: 'right' })
+                if (error.status == 401) {
+                    Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right', delay: "10000" });
+                    $state.go("home")
+                }
+                else
+                    Notification.error({ message: "Couldn't load the most frequent keywords graph.", positionY: 'bottom', positionX: 'right' })
             });
 
     }

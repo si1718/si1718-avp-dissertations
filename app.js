@@ -26,6 +26,12 @@ app.use(BASE_API_PATH + "/newSisiusDissertations", NewSisiusDissertationControll
 var DissertationAuthController = require("./dissertation/DissertationAuthController");
 app.use(BASE_AUTH_API_PATH + '/dissertations', DissertationAuthController);
 
+var StatsAuthController = require("./stats/StatsAuthController");
+app.use(BASE_AUTH_API_PATH + "/stats", StatsAuthController);
+
+var NewSisiusDissertationAuthController = require("./newSisiusDissertation/NewSisiusDissertationAuthController");
+app.use(BASE_AUTH_API_PATH + "/newSisiusDissertations", NewSisiusDissertationAuthController);
+
 // frontend
 app.use('/', express.static(path.join(__dirname, "/public")));
 

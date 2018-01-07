@@ -14,12 +14,12 @@
         if (idDissertation) {
             // call the api and get the dissertation
             $http
-                .get("/api/v1/dissertations/" + idDissertation)
+                .get("/api/v1.1/dissertations/" + idDissertation)
                 .then(function(response) {
                     var thisDissertation = response.data;
                     vm.dissertation = thisDissertation;
                     $http
-                        .get("/api/v1/dissertations/recommendations/" + idDissertation)
+                        .get("/api/v1.1/dissertations/recommendations/" + idDissertation)
                         .then(function(response) {
                             var idDissertations = response.data;
                             vm.recommendations = [];
@@ -50,6 +50,10 @@
             }
             else if (error.status == "404") {
                 Notification.error({ message: "Dissertation not found.", delay: null, positionY: 'bottom', positionX: 'right' });
+            }
+            else if (error.status == 401) {
+                Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right', delay: "10000" });
+                $state.go("home")
             }
             else {
                 Notification.error({ message: "An unexpected error has occurred.", delay: null, positionY: 'bottom', positionX: 'right' });

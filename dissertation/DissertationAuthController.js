@@ -4,7 +4,6 @@ var helmet = require("helmet");
 var bodyParser = require("body-parser");
 var utils = require("./../utils.js");
 var checkJwt = require("./../auth/auth0.js").checkJwt;
-var checkScopes = require("./../auth/auth0.js").checkScopes;
 var expressJwtErrorHandling = require("./../auth/auth0.js").expressJwtErrorHandling;
 
 router.use(bodyParser.json()); //configura dentro de express el middleware bodyparser json
@@ -14,7 +13,7 @@ var Dissertation = require("./Dissertation");
 var Recommendation = require("./Recommendation");
 
 // RETRIEVE all dissertations
-router.get('/', checkJwt, checkScopes(['read:dissertations']), function(req, res) {
+router.get('/', checkJwt, function(req, res) {
     var query = {};
     var offset = req.query.offset;
     var limit = req.query.limit
@@ -53,7 +52,7 @@ router.get('/', checkJwt, checkScopes(['read:dissertations']), function(req, res
 });
 
 // RETRIEVE stats
-router.get('/stats', checkJwt, checkScopes(['read:dissertations']), function(req, res) {
+router.get('/stats', checkJwt, function(req, res) {
     var query = {};
     if (req.query.search)
         query.$text = { $search: req.query.search };
@@ -71,7 +70,7 @@ router.get('/stats', checkJwt, checkScopes(['read:dissertations']), function(req
 });
 
 // RETRIEVE a specific dissertation
-router.get('/:idDissertation', checkJwt, checkScopes(['read:dissertations']), function(req, res) {
+router.get('/:idDissertation', checkJwt, function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New GET request to /dissertations/:idDissertation without idDissertation, sending 400...");
@@ -100,7 +99,7 @@ router.get('/:idDissertation', checkJwt, checkScopes(['read:dissertations']), fu
 
 
 // CREATE a dissertation
-router.post('/', checkJwt, checkScopes(['edit:dissertations']), function(req, res) {
+router.post('/', checkJwt, function(req, res) {
     var thisDissertation = req.body;
     if (!thisDissertation) {
         console.log("WARNING: New POST request to /dissertations/ without dissertation, sending 400...");
@@ -153,7 +152,7 @@ router.post('/', checkJwt, checkScopes(['edit:dissertations']), function(req, re
 });
 
 // UPDATE a specific dissertation
-router.put('/:idDissertation', checkJwt, checkScopes(['edit:dissertations']), function(req, res) {
+router.put('/:idDissertation', checkJwt, function(req, res) {
     var thisDissertation = req.body;
     var idDissertation = req.params.idDissertation;
     if (!thisDissertation) {
@@ -187,7 +186,7 @@ router.put('/:idDissertation', checkJwt, checkScopes(['edit:dissertations']), fu
 });
 
 // DELETE all dissertations
-router.delete('/', checkJwt, checkScopes(['delete:dissertations']), function(req, res) {
+router.delete('/', checkJwt, function(req, res) {
     console.log("INFO: New DELETE request to /dissertations");
     Dissertation.remove({}, (err, output) => {
         if (err) {
@@ -208,7 +207,7 @@ router.delete('/', checkJwt, checkScopes(['delete:dissertations']), function(req
 });
 
 // DELETE a specific dissertation
-router.delete('/:idDissertation', checkJwt, checkScopes(['delete:dissertations']), function(req, res) {
+router.delete('/:idDissertation', checkJwt, function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New DELETE request to /dissertations/:idDissertation without idDissertation, sending 400...");
@@ -253,7 +252,7 @@ router.put("/", function(req, res) {
 // Other endpoints regarding other functional requirements on dissertations
 
 // RETRIEVE a list of recommendations given an idDissertation
-router.get("/recommendations/:idDissertation", checkJwt, checkScopes(['read:dissertations']), function(req, res) {
+router.get("/recommendations/:idDissertation", checkJwt, function(req, res) {
     var idDissertation = req.params.idDissertation;
     if (!idDissertation) {
         console.log("WARNING: New GET request to /dissertations/recommendations/:idDissertation without idDissertation, sending 400...");

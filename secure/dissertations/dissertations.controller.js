@@ -4,16 +4,16 @@
         .module('DissertationsApp')
         .controller('DissertationsController', DissertationsController);
 
-    DissertationsController.$inject = ["$scope", "$http", "$uibModal", "$timeout", "$rootScope", "Notification", "$stateParams", "authService"];
+    DissertationsController.$inject = ["$scope", "$http", "$uibModal", "$timeout", "$rootScope", "Notification", "$stateParams", "authService", "$state"];
 
-    function DissertationsController($scope, $http, $uibModal, $timeout, $rootScope, Notification, $stateParams, authService) {
+    function DissertationsController($scope, $http, $uibModal, $timeout, $rootScope, Notification, $stateParams, authService, $state) {
         var vm = this;
 
         var search = "";
-        
+
         var loadDissertations = function(page, limit, search) {
             $http
-                .get("/api/v1/dissertations?offset=" + ((page - 1) * limit) + "&limit=" + limit + search)
+                .get("/api/v1.1/dissertations?offset=" + ((page - 1) * limit) + "&limit=" + limit + search)
                 .then(function(response) {
                     // get count of elements in db for this query
                     $http
@@ -27,7 +27,12 @@
                             vm.hideTable = true;
                         });
                 }, function(error) {
-                    Notification.error({ message: 'An unexpected error has ocurred.', delay: null });
+                    if (error.status == 401) {
+                        Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right', delay: "10000" });
+                        $state.go('home');
+                    }
+                    else
+                        Notification.error({ message: 'An unexpected error has ocurred.', delay: null });
                     vm.hideTable = true;
                 });
         };

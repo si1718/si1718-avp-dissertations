@@ -11,11 +11,11 @@
 
         var loadDissertations = function(page, limit) {
             $http
-                .get("/api/v1/newSisiusDissertations?offset=" + ((page - 1) * limit) + "&limit=" + limit)
+                .get("/api/v1.1/newSisiusDissertations?offset=" + ((page - 1) * limit) + "&limit=" + limit)
                 .then(function(response) {
                     // get count of elements in db for this query
                     $http
-                        .get('/api/v1/newSisiusDissertations/stats')
+                        .get('/api/v1.1/newSisiusDissertations/stats')
                         .then(function(stats) {
                             vm.dissertations = response.data;
                             vm.pagination = { total: stats.data.total, page: page, limit: limit }
@@ -25,8 +25,14 @@
                             vm.hideTable = true;
                         });
                 }, function(error) {
-                    Notification.error({ message: 'An unexpected error has ocurred.', delay: null });
-                    vm.hideTable = true;
+                    if (error.status == 401) {
+                        Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right', delay: "10000" });
+                        $state.go("home")
+                    }
+                    else {
+                        Notification.error({ message: 'An unexpected error has ocurred.', delay: null });
+                        vm.hideTable = true;
+                    }
                 });
         };
 
@@ -36,7 +42,7 @@
 
         vm.toCreateDissertationState = function(dissertation) {
             console.log("FDFDFD");
-            $state.go('dissertations-edit.create', {newSisiusDissertation: dissertation});
+            $state.go('dissertations-edit.create', { newSisiusDissertation: dissertation });
         }
 
         vm.loadPage = loadPage;

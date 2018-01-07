@@ -20,7 +20,6 @@
                         console.log(err);
                     }
                     if (authResult && authResult.idToken) {
-                        console.log(authResult);
                         setUser(authResult);
                     }
                 });
