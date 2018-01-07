@@ -1,68 +1,50 @@
 (function() {
 
+    'use strict';
+
     angular
         .module('DissertationsApp')
         .service('authService', authService);
 
-    authService.$inject = ['$state', 'angularAuth0', '$timeout'];
+    authService.$inject = ['$state', 'angularAuth0', 'authManager'];
 
-    function authService($state, angularAuth0, $timeout) {
-
-        function login() {
+    function authService($state, angularAuth0, authManager) {
+        function login(username, password) {
             angularAuth0.authorize();
         }
 
-        function handleAuthentication() {
-            console.log("HOLA!!");
-            angularAuth0.parseHash(function(err, authResult) {
-                if (authResult && authResult.accessToken && authResult.idToken) {
-                    console.log("ESTOY DENTRO");
-                    setSession(authResult);
-                    console.log(authResult);
-                    $state.go('home');
-                }
-                else if (err) {
-                    console.log("ERROR!!");
-
-                    $timeout(function() {
-                        $state.go('home');
-                    });
-                    console.log(err);
-                }
-            });
-        }
-
-        function setSession(authResult) {
-            console.log(authResult);
-            // Set the time that the access token will expire at
-            let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-            localStorage.setItem('access_token', authResult.accessToken);
-            localStorage.setItem('id_token', authResult.idToken);
-            localStorage.setItem('expires_at', expiresAt);
+        function handleParseHash() {
+            angularAuth0.parseHash({ _idTokenVerification: false },
+                function(err, authResult) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    if (authResult && authResult.idToken) {
+                        console.log(authResult);
+                        setUser(authResult);
+                    }
+                });
         }
 
         function logout() {
-            // Remove tokens and expiry time from localStorage
             localStorage.removeItem('access_token');
             localStorage.removeItem('id_token');
-            localStorage.removeItem('expires_at');
+        }
+
+        function setUser(authResult) {
+            localStorage.setItem('access_token', authResult.accessToken);
+            localStorage.setItem('id_token', authResult.idToken);
         }
 
         function isAuthenticated() {
-            // Check whether the current time is past the 
-            // access token's expiry time
-
-            let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-            //console.log(localStorage);
-            return new Date().getTime() < expiresAt;
+            return authManager.isAuthenticated();
         }
 
         return {
             login: login,
-            handleAuthentication: handleAuthentication,
+            handleParseHash: handleParseHash,
             logout: logout,
             isAuthenticated: isAuthenticated
         }
-
     }
 })();
