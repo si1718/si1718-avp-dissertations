@@ -27,9 +27,9 @@ var DissertationAuthController = require("./dissertation/DissertationAuthControl
 app.use(BASE_AUTH_API_PATH + '/dissertations', DissertationAuthController);
 
 // frontend
-app.use('/', express.static(path.join(__dirname, "public")));
+app.use('/', express.static(path.join(__dirname, "/public")));
 
 //secure frontend
-app.use('/secure', express.static(path.join(__dirname, "publicSecure")));
+app.use('/secure', express.static(path.join(__dirname, "/secure")));
 
 module.exports = app;
