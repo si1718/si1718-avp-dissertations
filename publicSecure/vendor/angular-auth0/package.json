@@ -1,0 +1,96 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "angular-auth0",
+        "scope": null,
+        "escapedName": "angular-auth0",
+        "name": "angular-auth0",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/home/ubuntu/workspace/si1718-avp-dissertations"
+    ]
+  ],
+  "_from": "angular-auth0@latest",
+  "_id": "angular-auth0@3.0.0",
+  "_inCache": true,
+  "_location": "/angular-auth0",
+  "_nodeVersion": "9.2.1",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/angular-auth0-3.0.0.tgz_1513959367072_0.32211863645352423"
+  },
+  "_npmUser": {
+    "name": "aaguiarz",
+    "email": "andres.aguiar@gmail.com"
+  },
+  "_npmVersion": "5.6.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "angular-auth0",
+    "scope": null,
+    "escapedName": "angular-auth0",
+    "name": "angular-auth0",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-auth0/-/angular-auth0-3.0.0.tgz",
+  "_shasum": "8837178182774639d46a1f6a9a92dec644a42699",
+  "_shrinkwrap": null,
+  "_spec": "angular-auth0",
+  "_where": "/home/ubuntu/workspace/si1718-avp-dissertations",
+  "author": {
+    "name": "Auth0"
+  },
+  "bugs": {
+    "url": "https://github.com/auth0/angular-auth0/issues"
+  },
+  "dependencies": {
+    "angular": "^1.6.8",
+    "auth0-js": "^9.0.0"
+  },
+  "description": "Auth0.js v9 wrapper for Angular.js",
+  "devDependencies": {
+    "babili-webpack-plugin": "^0.1.2",
+    "webpack": "^3.1.0"
+  },
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-wU7CI0YybpHeKfrleUV/LK+0iVHZeWbrpwsj6d+kRUpHetPBdRMWcTsYNLcxFZ04esmIBgmuAyZ6qZSkJHsfpA==",
+    "shasum": "8837178182774639d46a1f6a9a92dec644a42699",
+    "tarball": "https://registry.npmjs.org/angular-auth0/-/angular-auth0-3.0.0.tgz"
+  },
+  "gitHead": "a9259eaee3b6130de4dfdd710ef91aaba2110fd6",
+  "homepage": "https://github.com/auth0/angular-auth0#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "aaguiarz",
+      "email": "andres.aguiar@gmail.com"
+    },
+    {
+      "name": "ryanchenkie",
+      "email": "ryanchenkie@gmail.com"
+    }
+  ],
+  "name": "angular-auth0",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/auth0/angular-auth0.git"
+  },
+  "scripts": {
+    "build": "webpack",
+    "build:watch": "webpack --progress --colors --watch"
+  },
+  "version": "3.0.0"
+}

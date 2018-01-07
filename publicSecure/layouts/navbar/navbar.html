@@ -28,6 +28,12 @@
                 <li>
                     <a href="https://si1718-dfr-researchers.herokuapp.com/#!/">Researchers</a>
                 </li>
+                <li>
+                    <a href ng-if="!vm.auth.isAuthenticated()" ng-click="vm.auth.login()">Log in</a>
+                </li>
+                <li>
+                    <a href ng-if="vm.auth.isAuthenticated()" ng-click="vm.auth.logout()">Log out</a>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

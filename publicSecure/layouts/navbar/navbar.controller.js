@@ -3,8 +3,11 @@
         .module('DissertationsApp')
         .controller('NavbarController', NavbarController);
         
-        function NavbarController() {
+        NavbarController.$inject = ['authService'];
+        
+        function NavbarController(authService) {
             var vm = this;
+            vm.auth = authService;
         }
         
 })();

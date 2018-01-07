@@ -13,12 +13,17 @@
         }
 
         function handleAuthentication() {
+            console.log("HOLA!!");
             angularAuth0.parseHash(function(err, authResult) {
                 if (authResult && authResult.accessToken && authResult.idToken) {
+                    console.log("ESTOY DENTRO");
                     setSession(authResult);
+                    console.log(authResult);
                     $state.go('home');
                 }
                 else if (err) {
+                    console.log("ERROR!!");
+
                     $timeout(function() {
                         $state.go('home');
                     });
@@ -28,6 +33,7 @@
         }
 
         function setSession(authResult) {
+            console.log(authResult);
             // Set the time that the access token will expire at
             let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
             localStorage.setItem('access_token', authResult.accessToken);
@@ -45,7 +51,9 @@
         function isAuthenticated() {
             // Check whether the current time is past the 
             // access token's expiry time
+
             let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+            //console.log(localStorage);
             return new Date().getTime() < expiresAt;
         }
 
