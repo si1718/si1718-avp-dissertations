@@ -6,13 +6,13 @@
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('callback', {
+        $stateProvider.state('profile', {
             parent: 'app',
-            url: '/callback',
+            url: '/profile',
             views: {
                 'content@': {
-                    templateUrl: 'callback/callback.html',
-                    controller: 'CallbackController',
+                    templateUrl: 'profile/profile.html',
+                    controller: 'ProfileController',
                     controllerAs: 'vm'
                 }
             }

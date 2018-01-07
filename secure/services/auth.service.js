@@ -9,6 +9,8 @@
     authService.$inject = ['$state', 'angularAuth0', 'authManager'];
 
     function authService($state, angularAuth0, authManager) {
+        var userProfile;
+
         function login(username, password) {
             angularAuth0.authorize();
         }
@@ -39,11 +41,35 @@
             return authManager.isAuthenticated();
         }
 
+        function getProfile(cb) {
+            var accessToken = localStorage.getItem('access_token');
+            if (!accessToken) {
+                throw new Error('Access token must exist to fetch profile');
+            }
+            angularAuth0.client.userInfo(accessToken, function(err, profile) {
+                if (profile) {
+                    setUserProfile(profile);
+                }
+                cb(err, profile);
+            });
+        }
+
+        function setUserProfile(profile) {
+            userProfile = profile;
+        }
+
+        function getCachedProfile() {
+            return userProfile;
+        }
+
         return {
             login: login,
             handleParseHash: handleParseHash,
             logout: logout,
-            isAuthenticated: isAuthenticated
+            isAuthenticated: isAuthenticated,
+            getProfile: getProfile,
+            setUserProfile: setUserProfile,
+            getCachedProfile: getCachedProfile
         }
     }
 })();
