@@ -92,7 +92,7 @@
                 });
 
             // MostFrequentKeywords in elsevier
-            $http.get('/api/v1/stats/mostFrequentKeywordsElsevier')
+            $http.get('/api/v1.1/stats/mostFrequentKeywordsElsevier')
                 .then(function(response) {
                     var data = response.data;
                     // sorts by year asc
@@ -106,7 +106,7 @@
                 });
 
             // DissertationsPerGroup
-            $http.get('/api/v1/stats/dissertationsPerGroup')
+            $http.get('/api/v1.1/stats/dissertationsPerGroup')
                 .then(function(response) {
                     var data = response.data;
                     var series = [];
