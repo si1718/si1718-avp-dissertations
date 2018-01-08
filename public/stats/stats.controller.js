@@ -27,10 +27,6 @@
                 var keywordsSet = new Set(data.map(x => x.keyword));
                 keywordsSet.forEach(x => keywords.push(x));
 
-                console.log(dates)
-                console.log(keywords)
-                console.log(data)
-
                 var series = [];
                 keywords.forEach(k => {
                     var s = { "name": k, data: [] }
@@ -43,8 +39,6 @@
                     });
                     series.push(s);
                 })
-
-                console.log(series);
 
                 loadSimpleLineChart('twitter-stats-chart', dates, series, 'Mentions in Twitter (logarithmic scale)', 'Keywords', true);
             }, function(error) {
@@ -70,11 +64,14 @@
         $http.get('/api/v1/stats/dissertationsPerTutor')
             .then(function(response) {
                 var data = response.data;
+                var series = [];
                 // sorts by year asc
                 data.sort(function(a, b) { return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0); });
-                data = data.map(x => [x.tutor, x.count])
+                var categories = data.map(x => x.tutor);
+                var si1718count = data.map(x => x.count);
+                series.push({ name: "si1718", data: si1718count });
 
-                loadSimpleBarChart('dissertations-tutors-chart', data, 'Directed dissertations', 'Directed dissertations by: <b>{point.y:.1f}</b>', 'Dissertations')
+                loadSimpleBarChart('dissertations-tutors-chart', categories, series, 'Directed dissertations', 'Directed dissertations by: <b>{point.y:.1f}</b>', 'Dissertations')
             }, function(error) {
                 Notification.error({ message: "Couldn't load the dissertations per tutor graph.", positionY: 'bottom', positionX: 'right' })
             });
@@ -83,20 +80,49 @@
         $http.get('/api/v1/stats/mostFrequentKeywords')
             .then(function(response) {
                 var data = response.data;
-
                 // sorts by year asc
                 data.sort(function(a, b) { return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0); });
-                data = data.map(x => [x.keyword, x.count])
+                var categories = data.map(x => x.keyword);
+                var si1718count = data.map(x => x.count);
 
-                loadSimpleBarChart('most-frequent-keywords-chart', data, 'Number of dissertations with this keyword', 'Frequence of the keyword: <b>{point.y:.1f}</b>', 'Keywords')
+                loadSimpleBarChart('most-frequent-keywords-chart', categories, [{ name: "Keywords", data: si1718count }], 'Number of dissertations with this keyword', 'Frequence of the keyword: <b>{point.y:.1f}</b>', 'Keywords')
             }, function(error) {
                 Notification.error({ message: "Couldn't load the most frequent keywords graph.", positionY: 'bottom', positionX: 'right' })
+            });
+
+        // MostFrequentKeywords in elsevier
+        $http.get('/api/v1/stats/mostFrequentKeywordsElsevier')
+            .then(function(response) {
+                var data = response.data;
+                // sorts by year asc
+                data.sort(function(a, b) { return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0); });
+                var categories = data.map(x => x.keyword);
+                var elsevier = data.map(x => x.count);
+
+                loadSimpleBarChart('most-frequent-keywords-elsevier-chart', categories, [{ name: "Keywords", data: elsevier }], 'Documents found in Elsevier', 'Frequence of the keyword: <b>{point.y:.1f}</b>', 'Keywords')
+            }, function(error) {
+                Notification.error({ message: "Couldn't load the most frequent keywords elsevier graph.", positionY: 'bottom', positionX: 'right' })
+            });
+
+        // DissertationsPerGroup
+        $http.get('/api/v1/stats/dissertationsPerGroup')
+            .then(function(response) {
+                var data = response.data;
+                var series = [];
+                // sorts by year asc
+                data.sort(function(a, b) { return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0); });
+                var categories = data.map(x => x.group);
+                var si1718count = data.map(x => x.count);
+                series.push({ name: "si1718", data: si1718count });
+
+                loadSimpleBarChart('dissertations-groups-chart', categories, series, 'Directed dissertations', 'Directed dissertations by: <b>{point.y:.1f}</b>', 'Dissertations')
+            }, function(error) {
+                Notification.error({ message: "Couldn't load the dissertations per group graph.", positionY: 'bottom', positionX: 'right' })
             });
 
     }
 
     function loadSimpleLineChart(chartId, years, series, yLeyend, seriesName, logarithmic = false) {
-
         var config = {
             title: "",
             yAxis: {
@@ -142,7 +168,7 @@
         Highcharts.chart(chartId, config);
     }
 
-    function loadSimpleBarChart(chartId, data, yLeyend, pointFormat, seriesName) {
+    function loadSimpleBarChart(chartId, categories, series, yLeyend, pointFormat, seriesName) {
         Highcharts.chart(chartId, {
             title: "",
             chart: {
@@ -156,7 +182,8 @@
                         fontSize: '13px',
                         fontFamily: 'Verdana, sans-serif'
                     }
-                }
+                },
+                categories: categories
             },
             yAxis: {
                 min: 0,
@@ -170,22 +197,7 @@
             tooltip: {
                 pointFormat: pointFormat
             },
-            series: [{
-                name: 'seriesName',
-                data: data,
-                dataLabels: {
-                    enabled: true,
-                    rotation: -90,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.1f}', // one decimal
-                    y: 10, // 10 pixels down from the top
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
-                }
-            }]
+            series: series
         });
     }
 
