@@ -20,10 +20,10 @@
             clientID: 'Ox85DK2tYEz45ZZl4LY1xAp3x2IFUaIO',
             domain: 'si1718-avp-dissertations.eu.auth0.com',
             responseType: 'token id_token',
-            //audience: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/',
-            audience: 'https://si1718-avp-dissertations.herokuapp.com/',
-            //redirectUri: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/secure/#',
-            redirectUri: 'https://si1718-avp-dissertations.herokuapp.com/secure/#',
+            audience: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/',
+            //audience: 'https://si1718-avp-dissertations.herokuapp.com/',
+            redirectUri: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/secure/#',
+            //redirectUri: 'https://si1718-avp-dissertations.herokuapp.com/secure/#',
             scope: 'openid profile'
         });
 
