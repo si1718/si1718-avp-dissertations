@@ -44,7 +44,7 @@
     <div class="row">
         <div class="form-group col-md-6" ng-hide="vm.dissertation.authorName" ng-class="{'has-error': (dissertationForm.author.$touched || dissertationForm.$submitted) && dissertationForm.author.$invalid}">
             <label for="authorInput">Author</label>
-            <input type="text" class="form-control" id="authorInput" placeholder="Author" ng-model="vm.dissertation.author" name="author" author-is-set="vm.dissertation.authorName">
+            <input type="text" class="form-control" id="authorInput" placeholder="Author" ng-model="vm.dissertation.author" name="author" author-is-set="vm.dissertation.authorName.length">
             <div ng-messages="dissertationForm.author.$error" ng-show="dissertationForm.author.$touched || dissertationForm.$submitted">
                 <p ng-message="authorIsSet">Please enter an author</p>
             </div>
