@@ -44,6 +44,12 @@
         <p>{{vm.dissertation.keywords.join(', ')}}</p>
     </div>
 
+    <div class="row" ng-show="vm.dissertation.summary">
+        <label>Summary</label>
+        <textarea class="form-control" disabled rows="10">{{ vm.dissertation.summary }}</textarea>
+        <br>
+    </div>
+
     <div class="row">
         <a class="btn btn-warning" ui-sref="dissertations-edit.edit({idDissertation:vm.dissertation.idDissertation})">Edit</a>
         <a class="btn btn-primary" ui-sref="dissertations">Go to list</a>
@@ -71,6 +77,17 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div ng-show="vm.candidate">
+        <label>This dissertation in fondosdigitales.us.es</label>
+        <p><strong>Title: </strong>{{vm.candidate.title}}</p>
+        <p><strong>Tutors: </strong>{{vm.candidate.tutors.join(", ")}}</p>
+        <p><strong>Author: </strong>{{vm.candidate.authors.join(", ")}}</p>
+        <p><strong>Summary: </strong></p>
+        <textarea class="form-control" disabled rows="10">{{ vm.candidate.summary }}</textarea>
+        <br>
+        <button class="btn btn-primary" ng-click="vm.addSummary()">Add summary to this resource</button>
     </div>
 
 </div>

@@ -34,6 +34,48 @@
                         }, function(error) {
                             Notification.error({ message: "An error has occurred when retrieving recommendations.", delay: null, positionY: 'bottom', positionX: 'right' });
                         });
+
+                    if (thisDissertation.keywords.length && !thisDissertation.summary) {
+                        var keywordsToSearch = thisDissertation.keywords.filter(x => x.split(" ").length <= 2);
+                        console.log(keywordsToSearch)
+                        $http
+                            .get("https://si1718-dissertations-browser.herokuapp.com/api/v1/dissertations?search=" + keywordsToSearch.join(' '))
+                            .then(function(response) {
+                                console.log(response.data);
+                                var results = response.data;
+                                if (results.length) {
+                                    var candidates = results
+                                        .map(x => { return { dissertation: x, similarity: similarity(x.title, thisDissertation.title) } })
+                                        .sort(function(a, b) { return (a.similarity > b.similarity) ? -1 : ((b.similarity > a.similarity) ? 1 : 0); });
+                                    console.log(candidates);
+                                    var candidate = candidates[0];
+                                    
+                                    // is a candidate only if similarity is greater than 0.5
+                                    if (candidate.similarity > 0.5) {
+                                        vm.candidate = candidate.dissertation;
+
+                                        vm.addSummary = function() {
+
+                                            $http
+                                                .put("/api/v1/dissertations/" + idDissertation, { summary: vm.candidate.summary })
+                                                .then(function(response) {
+                                                    Notification.success({ message: "Summary successfully added.", positionY: 'bottom', positionX: 'right' });
+                                                    $state.transitionTo($state.current, $stateParams, {
+                                                        reload: true,
+                                                        inherit: false,
+                                                        notify: true
+                                                    });
+                                                }, function(error) {
+                                                    Notification.error({ message: "An unexpected error has occurred when adding the summary.", positionY: 'bottom', positionX: 'right' });
+                                                });
+                                        }
+                                    }
+                                }
+
+                            });
+                    }
+
+
                 }, function(error) {
                     errorsHandling(error);
                 });

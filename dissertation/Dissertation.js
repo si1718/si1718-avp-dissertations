@@ -11,12 +11,13 @@ var DissertationSchema = new mongoose.Schema({
     year: { type: Number, required: true },
     idDissertation: { type: String, required: true, unique: true },
     keywords: { type: [String], required: false },
-    viewURL: { type: String, required: true }
+    viewURL: { type: String, required: true },
+    summary: { type: String, required: false }
 });
 
 DissertationSchema.plugin(mongoosePaginate);
 //DissertationSchema.index({ author: 'text', title: 'text', year: 'text', tutors: 'text', 'tutors.url': 'text', 'tutors.name': 'text', authorName: 'text', idDissertation: 'text' });
-DissertationSchema.index({'$**': 'text'});
+DissertationSchema.index({ '$**': 'text' });
 
 
 mongoose.model("Dissertation", DissertationSchema);
