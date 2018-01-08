@@ -126,7 +126,8 @@ router.post('/', checkJwt, function(req, res) {
                 year: thisDissertation.year,
                 idDissertation: idDissertation,
                 keywords: thisDissertation.keywords,
-                viewURL: "https://si1718-avp-dissertations.herokuapp.com/#!/dissertations/" + idDissertation + "/edit"
+                viewURL: "https://si1718-avp-dissertations.herokuapp.com/#!/dissertations/" + idDissertation + "/edit",
+                summary: thisDissertation.summary
             }, (err, dissertation) => {
                 if (err) {
                     if (err.name == "ValidationError") {

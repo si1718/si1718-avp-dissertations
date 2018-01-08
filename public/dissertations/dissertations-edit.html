@@ -30,7 +30,7 @@
                 </table>
             </div>
         </div>
-        <div class="row" >
+        <div class="row">
             <div class="col-md-4">
                 <input type="text" class="form-control" id="tutorsInput" placeholder="Tutor name" ng-model="vm.tutorName">
             </div>
@@ -86,7 +86,14 @@
             <input type="text" class="form-control" id="keywordsInput" placeholder="Keywords" ng-model="vm.dissertation.keywords">
         </div>
     </div>
-
+    
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="summaryInput">Summary</label>
+            <textarea class="form-control" id="summaryInput" placeholder="Summary" ng-model="vm.dissertation.summary"></textarea>
+        </div>
+    </div>
+    
     <div class="row">
         <input class="btn btn-primary" type="submit" ng-click="vm.send(vm.dissertation)" value="Save" ng-disabled="dissertationForm.$invalid" />
     </div>

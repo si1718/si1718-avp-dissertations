@@ -30,7 +30,8 @@
         jwtOptionsProvider.config({
             tokenGetter: function() {
                 return localStorage.getItem('access_token');
-            }
+            },
+            whiteListedDomains: ['https://si1718-dissertations-browser.herokuapp.com']
         });
         $httpProvider.interceptors.push('jwtInterceptor');
     }
