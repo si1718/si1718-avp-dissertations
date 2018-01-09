@@ -90,4 +90,23 @@
         <button class="btn btn-primary" ng-click="vm.addSummary()">Add summary to this resource</button>
     </div>
 
+    <div class="row" ng-show="vm.suggestions.length">
+        <label>You may be interested in adding the following dissertations from fondosdigitales.us.es</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Author</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="dissertation in vm.suggestions">
+                    <td ng-hide="dissertation.authorViewURL">{{dissertation.author}}</td>
+                    <td>{{dissertation.title}}</td>
+                    <td><a class="btn btn-primary" ng-click="vm.toCreateDissertationState(dissertation)">Add</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>

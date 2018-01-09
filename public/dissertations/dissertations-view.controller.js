@@ -37,7 +37,6 @@
 
                     if (thisDissertation.keywords.length && !thisDissertation.summary) {
                         var keywordsToSearch = thisDissertation.keywords.filter(x => x.split(" ").length <= 2);
-                        console.log(keywordsToSearch)
                         $http
                             .get("https://si1718-dissertations-browser.herokuapp.com/api/v1/dissertations?search=" + keywordsToSearch.join(' '))
                             .then(function(response) {
@@ -49,7 +48,6 @@
                                         .sort(function(a, b) { return (a.similarity > b.similarity) ? -1 : ((b.similarity > a.similarity) ? 1 : 0); });
                                     console.log(candidates);
                                     var candidate = candidates.shift();
-                                    
                                     // is a candidate only if similarity is greater than 0.5
                                     if (candidate.similarity > 0.5) {
                                         vm.candidate = candidate.dissertation;
@@ -69,10 +67,15 @@
                                                 });
                                         }
                                     }
-                                    
+
                                     // Suggest to add the non similar dissertations
-                                    var suggestions = candidates.map(x => x.dissertation);
-                                    
+                                    var suggestions = getRandomSubarray(candidates.map(x => x.dissertation), 5);
+                                    suggestions = suggestions.map(x => { return { title: x.title, tutors: x.tutors, author: x.authors[0], summary: x.summary, year: Number(x.date.split(" ")[x.date.split(" ").length - 1]) } })
+                                    console.log(suggestions);
+                                    vm.suggestions = suggestions;
+                                    vm.toCreateDissertationState = function(dissertation) {
+                                        $state.go('dissertations-edit.create', { newSisiusDissertation: dissertation });
+                                    }
                                 }
 
                             });

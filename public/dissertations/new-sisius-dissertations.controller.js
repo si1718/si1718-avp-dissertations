@@ -35,7 +35,6 @@
         };
 
         vm.toCreateDissertationState = function(dissertation) {
-            console.log("FDFDFD");
             $state.go('dissertations-edit.create', {newSisiusDissertation: dissertation});
         }
 
