@@ -21,6 +21,13 @@
                     var thisDissertation = response.data;
                     if (!thisDissertation.keywords)
                         thisDissertation.keywords = [];
+                    if (thisDissertation.summary)
+                        $http
+                        .post("/api/v1/keywordsExtractor", { text: thisDissertation.summary.trim() })
+                        .then(function(response) {
+                            vm.keywordsSuggestions = response.data;
+                            console.log(response);
+                        })
                     vm.dissertation = thisDissertation;
                 }, function(error) {
                     errorsHandling(error);
@@ -32,6 +39,13 @@
                 delete newSisiusDissertation._id;
                 if (newSisiusDissertation.author === 'undefined')
                     delete newSisiusDissertation.author;
+                if (newSisiusDissertation.summary)
+                    $http
+                    .post("/api/v1/keywordsExtractor", { text: newSisiusDissertation.summary.trim() })
+                    .then(function(response) {
+                        vm.keywordsSuggestions = response.data;
+                        console.log(response);
+                    })
                 vm.dissertation = newSisiusDissertation
             }
             else {
@@ -181,14 +195,16 @@
 
         // list of tutors validation
         $scope.$watch(function() {
-            return vm.dissertation.tutors;
+            if (vm.dissertation)
+                return vm.dissertation.tutors;
         }, function(current) {
-            console.log(current);
-            var isValid = false;
-            if (current.length > 0) {
-                isValid = true;
+            if (current) {
+                var isValid = false;
+                if (current.length > 0) {
+                    isValid = true;
+                }
+                $scope.dissertationForm.$setValidity('tutorsEmpty', isValid);
             }
-            $scope.dissertationForm.$setValidity('tutorsEmpty', isValid);
         }, true);
 
         var errorsHandling = function(error) {

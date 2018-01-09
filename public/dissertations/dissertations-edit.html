@@ -86,14 +86,21 @@
             <input type="text" class="form-control" id="keywordsInput" placeholder="Keywords" ng-model="vm.dissertation.keywords">
         </div>
     </div>
-    
+
+    <div class="row" ng-show="vm.keywordsSuggestions">
+        <div class="form-group col-md-6">
+            <label>Keywords suggestions</label>
+            <pre>{{vm.keywordsSuggestions.join(", ")}}</pre>
+        </div>
+    </div>
+
     <div class="row">
         <div class="form-group col-md-6">
             <label for="summaryInput">Summary</label>
             <textarea class="form-control" id="summaryInput" placeholder="Summary" ng-model="vm.dissertation.summary"></textarea>
         </div>
     </div>
-    
+
     <div class="row">
         <input class="btn btn-primary" type="submit" ng-click="vm.send(vm.dissertation)" value="Save" ng-disabled="dissertationForm.$invalid" />
     </div>
