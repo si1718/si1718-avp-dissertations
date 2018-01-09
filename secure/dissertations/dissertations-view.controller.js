@@ -37,7 +37,6 @@
 
                     if (thisDissertation.keywords.length && !thisDissertation.summary) {
                         var keywordsToSearch = thisDissertation.keywords.filter(x => x.split(" ").length <= 2);
-                        console.log(keywordsToSearch)
                         $http
                             .get("https://si1718-dissertations-browser.herokuapp.com/api/v1/dissertations?search=" + keywordsToSearch.join(' '))
                             .then(function(response) {
@@ -45,19 +44,17 @@
                                 var results = response.data;
                                 if (results.length) {
                                     var candidates = results
-                                        .map(x => { return { dissertation: x, similarity: similarity(x.title, thisDissertation.title) } })
+                                        .map(x => { return { dissertation: x, similarity: similarity(normalize(x.title), normalize(thisDissertation.title)) } })
                                         .sort(function(a, b) { return (a.similarity > b.similarity) ? -1 : ((b.similarity > a.similarity) ? 1 : 0); });
                                     console.log(candidates);
-                                    var candidate = candidates[0];
-
+                                    var candidate = candidates.shift();
                                     // is a candidate only if similarity is greater than 0.5
                                     if (candidate.similarity > 0.5) {
                                         vm.candidate = candidate.dissertation;
 
                                         vm.addSummary = function() {
-
                                             $http
-                                                .put("/api/v1/dissertations/" + idDissertation, { summary: vm.candidate.summary })
+                                                .put("/api/v1.1/dissertations/" + idDissertation, { summary: vm.candidate.summary })
                                                 .then(function(response) {
                                                     Notification.success({ message: "Summary successfully added.", positionY: 'bottom', positionX: 'right' });
                                                     $state.transitionTo($state.current, $stateParams, {
@@ -69,6 +66,15 @@
                                                     Notification.error({ message: "An unexpected error has occurred when adding the summary.", positionY: 'bottom', positionX: 'right' });
                                                 });
                                         }
+                                    }
+
+                                    // Suggest to add the non similar dissertations
+                                    var suggestions = getRandomSubarray(candidates.map(x => x.dissertation), 5);
+                                    suggestions = suggestions.map(x => { return { title: x.title, tutors: x.tutors, author: x.authors[0], summary: x.summary, year: Number(x.date.split(" ")[x.date.split(" ").length - 1]) } })
+                                    console.log(suggestions);
+                                    vm.suggestions = suggestions;
+                                    vm.toCreateDissertationState = function(dissertation) {
+                                        $state.go('dissertations-edit.create', { newSisiusDissertation: dissertation });
                                     }
                                 }
 
