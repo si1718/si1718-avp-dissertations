@@ -22,6 +22,9 @@ app.use(BASE_API_PATH + "/stats", StatsController);
 var NewSisiusDissertationController = require("./newSisiusDissertation/NewSisiusDissertationController");
 app.use(BASE_API_PATH + "/newSisiusDissertations", NewSisiusDissertationController);
 
+var KeywordsExtractorController = require("./keywordsExtractor/KeywordsExtractorController");
+app.use(BASE_API_PATH + "/keywordsExtractor", KeywordsExtractorController);
+
 // API v1.1 controllers
 var DissertationAuthController = require("./dissertation/DissertationAuthController");
 app.use(BASE_AUTH_API_PATH + '/dissertations', DissertationAuthController);
