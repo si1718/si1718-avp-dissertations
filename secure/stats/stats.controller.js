@@ -10,7 +10,7 @@
 
         if (authService.isAuthenticated()) {
             // TwitterKeywords stats
-            $http.get('/api/v1/stats/twitterKeywords')
+            $http.get('/api/v1.1/stats/twitterKeywords')
                 .then(function(response) {
                     var data = response.data;
 
@@ -47,7 +47,7 @@
                 });
 
             // DissertationsPerYear
-            $http.get('/api/v1/stats/dissertationsPerYear')
+            $http.get('/api/v1.1/stats/dissertationsPerYear')
                 .then(function(response) {
                     var data = response.data;
                     // sorts by year asc
@@ -62,7 +62,7 @@
                 });
 
             // DissertationsPerTutor
-            $http.get('/api/v1/stats/dissertationsPerTutor')
+            $http.get('/api/v1.1/stats/dissertationsPerTutor')
                 .then(function(response) {
                     var data = response.data;
                     var series = [];
@@ -78,7 +78,7 @@
                 });
 
             // MostFrequentKeywords
-            $http.get('/api/v1/stats/mostFrequentKeywords')
+            $http.get('/api/v1.1/stats/mostFrequentKeywords')
                 .then(function(response) {
                     var data = response.data;
                     // sorts by year asc

@@ -17,8 +17,8 @@
 
     function config(angularAuth0Provider, jwtOptionsProvider, $httpProvider) {
         angularAuth0Provider.init({
-            clientID: 'Ox85DK2tYEz45ZZl4LY1xAp3x2IFUaIO',
-            domain: 'si1718-avp-dissertations.eu.auth0.com',
+            clientID: '6kxSOnaW7ZRlLZudaPVVQWicsxb48et5',
+            domain: 'si1718-avp.eu.auth0.com',
             responseType: 'token id_token',
             audience: 'https://si1718-avp-dissertations-alvarovp27.c9users.io/',
             //audience: 'https://si1718-avp-dissertations.herokuapp.com/',
