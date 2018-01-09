@@ -122,9 +122,35 @@
                 });
         }
         else {
-            Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right'});
+            Notification.error({ message: 'Error: You are not authorized for this action.', positionY: 'bottom', positionX: 'right' });
             $state.go('home');
         }
+
+        // Requests per day stats
+        $http.get('/api/v1.1/stats/requestCount')
+            .then(function(response) {
+                var data = response.data;
+
+                var requestCounts = [];
+
+                data.forEach(x => {
+                    var split = x.date.split('/');
+                    var d = new Date(split[2], split[1] - 1, split[0]);
+                    requestCounts.push({ date: d, count: x.count });
+                });
+
+                requestCounts = requestCounts.sort(function(d1, d2) { return (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0 }).map(x => { return { date: x.date.getDate() + "/" + x.date.getMonth() + 1 + "/" + x.date.getFullYear(), count: x.count } });
+
+                var dates = requestCounts.map(x => x.date);
+                var counts = requestCounts.map(x => x.count);
+
+                console.log(dates)
+                console.log(counts)
+
+                loadSimpleLineChart('requests-count-chart', dates, [{ name: "Requests", data: counts }], 'Requests per day', 'Requests');
+            }, function(error) {
+                Notification.error({ message: "Couldn't load the dissertations per year graph.", positionY: 'bottom', positionX: 'right' })
+            });
 
     }
 
