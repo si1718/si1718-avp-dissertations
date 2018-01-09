@@ -13,6 +13,7 @@ var MostFrequentKeywords = require("./MostFrequentKeywords");
 var TwitterKeywords = require("./TwitterKeywords");
 var DissertationsPerGroup = require("./DissertationsPerGroup");
 var MostFrequentKeywordsElsevier = require("./MostFrequentKeywordsElsevier");
+var RequestCount = require("./RequestCount");
 
 // RETRIEVE all dissertationsPerYear stats
 router.get('/dissertationsPerYear', function(req, res) {
@@ -72,7 +73,7 @@ router.get('/twitterKeywords', function(req, res) {
 
 // RETRIEVE all dissertationsPerGroup stats
 router.get('/dissertationsPerGroup', function(req, res) {
-    DissertationsPerGroup.find({group: {$ne: 'no-group'}}, null,{sort: {count: -1}, limit: 20 }, (err, elements) => {
+    DissertationsPerGroup.find({ group: { $ne: 'no-group' } }, null, { sort: { count: -1 }, limit: 20 }, (err, elements) => {
         if (err) {
             console.error('WARNING: Error getting data from DB => ' + err);
             res.sendStatus(500); // internal server error
@@ -86,13 +87,28 @@ router.get('/dissertationsPerGroup', function(req, res) {
 
 // RETRIEVE all mostFrequentKeywordsElsevier stats
 router.get('/mostFrequentKeywordsElsevier', function(req, res) {
-    MostFrequentKeywordsElsevier.find({}, null,{sort: {count: -1}, limit: 20 }, (err, elements) => {
+    MostFrequentKeywordsElsevier.find({}, null, { sort: { count: -1 }, limit: 20 }, (err, elements) => {
         if (err) {
             console.error('WARNING: Error getting data from DB => ' + err);
             res.sendStatus(500); // internal server error
         }
         else {
             console.log("INFO: New GET request to /mostFrequentKeywordsElsevier");
+            res.send(elements);
+        }
+    });
+});
+
+// RETRIEVE all requestCountStats stats
+router.get('/requestCount', function(req, res) {
+    RequestCount.aggregate({ $group: {_id: {date: "$date"}, count: {$sum: 1} } }, (err, elements) => {
+        if (err) {
+            console.error('WARNING: Error getting data from DB => ' + err);
+            res.sendStatus(500); // internal server error
+        }
+        else {
+            console.log("INFO: New GET request to /requestCount");
+            elements = elements.map(x => {return {date: x._id.date, count: x.count}})
             res.send(elements);
         }
     });

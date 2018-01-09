@@ -16,6 +16,7 @@ var MostFrequentKeywords = require("./MostFrequentKeywords");
 var TwitterKeywords = require("./TwitterKeywords");
 var DissertationsPerGroup = require("./DissertationsPerGroup");
 var MostFrequentKeywordsElsevier = require("./MostFrequentKeywordsElsevier");
+var RequestCount = require("./RequestCount");
 
 // RETRIEVE all dissertationsPerYear stats
 router.get('/dissertationsPerYear', checkJwt, function(req, res) {
@@ -96,6 +97,21 @@ router.get('/mostFrequentKeywordsElsevier', checkJwt, function(req, res) {
         }
         else {
             console.log("INFO: New GET request to /mostFrequentKeywordsElsevier");
+            res.send(elements);
+        }
+    });
+});
+
+// RETRIEVE all requestCountStats stats
+router.get('/requestCount', checkJwt, function(req, res) {
+    RequestCount.aggregate({ $group: {_id: {date: "$date"}, count: {$sum: 1} } }, (err, elements) => {
+        if (err) {
+            console.error('WARNING: Error getting data from DB => ' + err);
+            res.sendStatus(500); // internal server error
+        }
+        else {
+            console.log("INFO: New GET request to /requestCount");
+            elements = elements.map(x => {return {date: x._id.date, count: x.count}})
             res.send(elements);
         }
     });
