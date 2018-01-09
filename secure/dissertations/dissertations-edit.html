@@ -87,6 +87,13 @@
         </div>
     </div>
 
+    <div class="row" ng-show="vm.keywordsSuggestions">
+        <div class="form-group col-md-6">
+            <label>Keywords suggestions</label>
+            <pre>{{vm.keywordsSuggestions.join(", ")}}</pre>
+        </div>
+    </div>
+
     <div class="row">
         <div class="form-group col-md-6">
             <label for="summaryInput">Summary</label>

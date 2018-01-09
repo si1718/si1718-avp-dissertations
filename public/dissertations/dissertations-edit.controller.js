@@ -21,13 +21,13 @@
                     var thisDissertation = response.data;
                     if (!thisDissertation.keywords)
                         thisDissertation.keywords = [];
+                    // suggest keywords based on the summary
                     if (thisDissertation.summary)
                         $http
                         .post("/api/v1/keywordsExtractor", { text: thisDissertation.summary.trim() })
                         .then(function(response) {
                             vm.keywordsSuggestions = response.data;
-                            console.log(response);
-                        })
+                        });
                     vm.dissertation = thisDissertation;
                 }, function(error) {
                     errorsHandling(error);
@@ -44,8 +44,7 @@
                     .post("/api/v1/keywordsExtractor", { text: newSisiusDissertation.summary.trim() })
                     .then(function(response) {
                         vm.keywordsSuggestions = response.data;
-                        console.log(response);
-                    })
+                    });
                 vm.dissertation = newSisiusDissertation
             }
             else {
